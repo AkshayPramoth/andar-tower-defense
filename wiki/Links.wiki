@@ -1,8 +1,8 @@
 =Collection of useful links for the Project=
 
 ==AndAR==
-* [http://flash.tarotaro.org/blog/2009/07/12/mgo2/ Flash to generate .patt files from markers]<br>
-* [http://www.roarmot.co.nz/ar/ Offline marker creator]<br>
+  * [http://flash.tarotaro.org/blog/2009/07/12/mgo2/ Flash to generate .patt files from markers]
+  * [http://www.roarmot.co.nz/ar/ Offline marker creator]<br>
 
 
 ==Other==
