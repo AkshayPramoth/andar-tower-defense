@@ -7,4 +7,4 @@ http://andar.googlecode.com/files/andararch.png
 
 = Tower Defense Klassendiagramm =
 
-http://code.google.com/p/andar-tower-defense/downloads/detail?name=PHUCDiagramm.png&can=2&q=
+http://img716.imageshack.us/img716/1214/phucdiagramm.png
