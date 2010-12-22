@@ -1,0 +1,9 @@
+The project cooperation is done in a scrum-inspired way.<br>
+The goal is to have a non-complete but runnable game since the end of the first iteration and then enhance it with features in every upcoming iteration.<br>
+<br>
+Here are the topics for the first iteration.
+
+= Iteration 1 =
+
+  # at least 4 markers with simple 3D objects
+  # one enemy going straight from Point A to B
