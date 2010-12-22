@@ -15,4 +15,12 @@ Based on AndARSampleProject by tdomhan.
 
 Shows a number of models, pre-shipped and own, on different markers.<br>
 Find the markers under "Downloads".<br>
-Based on AndARModelViewer by tdomhan.
+Based on AndARModelViewer by tdomhan.<br><br>
+*HOWTO:*<br>
+I have a somehow strange behaviour on my Samsung Galaxy 9000i S:<br>
+Application starts, but no 3D-models are shown.<br>
+*Solution:*<br>
+If the application is installed on the phone, I have to:<br>
+  # go to applications->ManyModelsTest: Force close, reset cache and data
+  # open Samsung Task Manager: Ram-Manager and clear memory on level 1 & 2
+After these steps, restarting the application works and shows the models.
