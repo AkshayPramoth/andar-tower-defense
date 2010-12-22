@@ -11,7 +11,7 @@ Find the markers under "Downloads".<br>
 Based on AndARSampleProject by tdomhan.
 
 
-= ManyModelsTest =
+=ManyModelsTest=
 
 Shows a number of models, pre-shipped and own, on different markers.<br>
 Find the markers under "Downloads".<br>
