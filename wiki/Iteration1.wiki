@@ -7,3 +7,7 @@ Here are the topics for the first iteration.
 
   # at least 4 markers with simple 3D objects
   # one enemy going straight from Point A to B
+  # display any information (text or image) as a HUD
+  # noticing when enemy is in range of towers
+  # definition and handling of the map-marker
+  # all the above points fit together in a project and checked in via SVN
