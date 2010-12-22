@@ -1,0 +1,18 @@
+Short explanations about the projects that have been checked in so far.
+
+= AndARProject =
+First checkin for own university project, an AndAR-Tower-Defense-Game.<br>
+Based on AndARModelViewer by tdomhan.
+
+= andar-colored-boxes =
+
+Demonstrates 4 diffently colored boxes on 4 different markers.<br>
+Find the markers under "Downloads".<br>
+Based on AndARSampleProject by tdomhan.
+
+
+= ManyModelsTest =
+
+Shows a number of models, pre-shipped and own, on different markers.<br>
+Find the markers under "Downloads".<br>
+Based on AndARModelViewer by tdomhan.
