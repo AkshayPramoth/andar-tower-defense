@@ -1,4 +1,6 @@
-package edu.dhbw.andobjviewer.parser;
+package amir.laribi.com;
+
+
 
 public class SimpleTokenizer {
 	String str = "";

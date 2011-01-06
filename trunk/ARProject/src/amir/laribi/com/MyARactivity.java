@@ -1,3 +1,5 @@
+package amir.laribi.com;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -48,7 +50,7 @@ public class MyARactivity extends AndARActivity implements SurfaceHolder.Callbac
 	private Model3D model3d;
 	private ProgressDialog waitDialog;
 	private Resources res;
-	
+	public static final boolean DEBUG = false;
 	ARToolkit artoolkit;
 	
 
@@ -127,6 +129,9 @@ public class MyARactivity extends AndARActivity implements SurfaceHolder.Callbac
 						e.printStackTrace();
 					} catch (ParseException e) {
 						e.printStackTrace();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 				}
 	    		return null;
@@ -146,8 +151,12 @@ public class MyARactivity extends AndARActivity implements SurfaceHolder.Callbac
 				startPreview();
 	    	}
 	    }
-
 		
+
+		public class Config {
+			public final static boolean DEBUG = false;
+		}
+
 		
 	}
 
