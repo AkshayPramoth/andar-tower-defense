@@ -1,6 +1,9 @@
+package amir.laribi.com;
+
 
 
 import java.io.Serializable;
+
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,9 +16,6 @@ import android.opengl.GLUtils;
 import android.util.Log;
 
 import edu.dhbw.andar.ARObject;
-import edu.dhbw.andobjviewer.models.Group;
-import edu.dhbw.andobjviewer.models.Material;
-import edu.dhbw.andobjviewer.models.Model;
 
 
 /**

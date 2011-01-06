@@ -1,6 +1,7 @@
-
+package amir.laribi.com;
 
 import java.io.BufferedReader;
+
 import java.io.File;
 
 import android.graphics.Bitmap;
