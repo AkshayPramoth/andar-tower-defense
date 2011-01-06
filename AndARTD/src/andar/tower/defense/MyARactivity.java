@@ -1,44 +1,19 @@
 package andar.tower.defense;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.Thread.UncaughtExceptionHandler;
-import java.net.URI;
-import java.util.Date;
 
-import edu.dhbw.andar.ARToolkit;
-import edu.dhbw.andar.AndARActivity;
-import edu.dhbw.andar.AndARRenderer;
-import edu.dhbw.andar.CameraPreviewHandler;
-import edu.dhbw.andar.CameraStatus;
-import edu.dhbw.andar.Config;
-import edu.dhbw.andar.exceptions.AndARException;
-
-import amir.laribi.com.R;
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.hardware.Camera;
 import android.net.ParseException;
-import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
-import android.view.View;
-import android.view.SurfaceHolder.Callback;
-import android.view.View.OnTouchListener;
-import android.widget.Toast;
+import edu.dhbw.andar.ARToolkit;
+import edu.dhbw.andar.AndARActivity;
+import edu.dhbw.andar.exceptions.AndARException;
 
 
 public class MyARactivity extends AndARActivity implements SurfaceHolder.Callback {
