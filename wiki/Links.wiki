@@ -3,6 +3,7 @@
 ==AndAR==
   * [http://flash.tarotaro.org/blog/2009/07/12/mgo2/ Flash to generate .patt files from markers]
   * [http://www.roarmot.co.nz/ar/ ARToolKit Marker Maker]<br>
+  * [http://groups.google.com/group/andar_android_augmented_reality/browse_thread/thread/07b497e57494190c# Discussion about matrices and relative marker positions]
 
 
 ==Other==
