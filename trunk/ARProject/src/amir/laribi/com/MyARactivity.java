@@ -53,7 +53,7 @@ public class MyARactivity extends AndARActivity implements SurfaceHolder.Callbac
 	public static final boolean DEBUG = false;
 	ARToolkit artoolkit;
 	
-
+//kommentare hier schreiben
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
