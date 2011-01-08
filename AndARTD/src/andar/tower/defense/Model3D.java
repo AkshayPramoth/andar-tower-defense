@@ -3,7 +3,6 @@ package andar.tower.defense;
 
 
 import java.io.Serializable;
-
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,10 +10,8 @@ import java.util.Vector;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.opengl.GLDebugHelper;
 import android.opengl.GLUtils;
 import android.util.Log;
-
 import edu.dhbw.andar.ARObject;
 
 
@@ -30,8 +27,8 @@ public class Model3D extends ARObject implements Serializable{
 	private Group[] nonTexturedGroups;
 	private HashMap<Material, Integer> textureIDs = new HashMap<Material, Integer>();
 	
-	public Model3D(Model model) {
-		super("model", "barcode.patt", 80.0, new double[]{0,0});
+	public Model3D(Model model, String patternName) {
+		super("model", patternName, 80.0, new double[]{0,0});
 		this.model = model;
 		model.finalize();
 		//separate texture from non textured groups for performance reasons
