@@ -111,7 +111,7 @@ public class MyARactivity extends AndARActivity implements SurfaceHolder.Callbac
 				
 				
 				//read the model file:						
-				if(modelFileName.endsWith(".obj")) {
+//				if(modelFileName.endsWith(".obj")) {
 					ObjParser parser = new ObjParser(fileUtil);
 					try {
 						if(Config.DEBUG)
@@ -172,7 +172,7 @@ public class MyARactivity extends AndARActivity implements SurfaceHolder.Callbac
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}
+//				}
 	    		return null;
 	    	}
 	    	@Override
