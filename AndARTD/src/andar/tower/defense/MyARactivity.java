@@ -18,10 +18,22 @@ import edu.dhbw.andar.exceptions.AndARException;
 
 
 public class MyARactivity extends AndARActivity implements SurfaceHolder.Callback {
+	/**
+	 * View a file in the assets folder
+	 */
+	public static final int TYPE_INTERNAL = 0;
+	/**
+	 * View a file on the sd card.
+	 */
+	public static final int TYPE_EXTERNAL = 1;
 	
+	/* Menu Options: */
+	private final int MENU_SCALE = 0;
+	private final int MENU_ROTATE = 1;
+	private final int MENU_TRANSLATE = 2;
+	private final int MENU_SCREENSHOT = 3;
 	
-	
-
+	private int mode = MENU_SCALE;
 	private Model model;
 	private Model model2;
 	private Model model3;
@@ -60,7 +72,8 @@ public class MyARactivity extends AndARActivity implements SurfaceHolder.Callbac
 
 	@Override
 	public void uncaughtException(Thread thread, Throwable ex) {
-		System.out.println("");
+		ex.printStackTrace();
+		System.out.println("error");
 		
 	}
 	  @Override
