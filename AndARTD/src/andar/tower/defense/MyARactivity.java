@@ -37,11 +37,14 @@ public class MyARactivity extends AndARActivity implements SurfaceHolder.Callbac
 	public static final boolean DEBUG = false;
 	ARToolkit artoolkit;
 	
-
+	public MyARactivity() {
+		super(false);
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.w("MyARactivity", "in first line");
 		super.setNonARRenderer(new LightingRenderer());//or might be omited
 		res=getResources();
 		artoolkit = getArtoolkit();		
@@ -66,12 +69,12 @@ public class MyARactivity extends AndARActivity implements SurfaceHolder.Callbac
 	    	//load the model
 	    	//this is done here, to assure the surface was already created, so that the preview can be started
 	    	//after loading the model
-	    	if(model == null) {
+//	    	if(model == null) {
 				waitDialog = ProgressDialog.show(this, "", 
 		                getResources().getText(R.string.loading), true);
 				waitDialog.show();
 				new ModelLoader().execute();
-			}
+//			}
 	    }
 	    
 		
