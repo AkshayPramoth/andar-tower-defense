@@ -182,8 +182,13 @@ public class MyARactivity extends AndARActivity implements SurfaceHolder.Callbac
 	    		
 	    		//register model
 	    		try {
-	    			if(model3d!=null)
+	    			if(model3d!=null) {
 	    				artoolkit.registerARObject(model3d);
+	    				artoolkit.registerARObject(model3d2);
+	    				artoolkit.registerARObject(model3d3);
+	    				artoolkit.registerARObject(model3d4);
+	    				artoolkit.registerARObject(model3d5);
+	    			}
 				} catch (AndARException e) {
 					e.printStackTrace();
 				}
