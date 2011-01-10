@@ -116,7 +116,7 @@ public class MyARactivity extends AndARActivity implements
 					if (Config.DEBUG)
 						Debug.startMethodTracing("AndObjViewer");
 
-					if (fileUtil != null) {
+//					if (fileUtil != null) {
 
 						BufferedReader fileReader = fileUtil
 								.getReaderFromName(modelFileName);
@@ -147,7 +147,7 @@ public class MyARactivity extends AndARActivity implements
 									modelName2patternName(modelFileName2)
 											+ ".patt");
 						} else {
-							Log.w("ModelLoader", "no file reader");
+							Log.w("ModelLoader", "no file reader: " + modelFileName2);
 						}
 						String modelFileName3 = "towergreen.obj";
 						BufferedReader fileReader3 = fileUtil
@@ -164,7 +164,7 @@ public class MyARactivity extends AndARActivity implements
 									modelName2patternName(modelFileName3)
 											+ ".patt");
 						} else {
-							Log.w("ModelLoader", "no file reader");
+							Log.w("ModelLoader", "no file reader: " + modelFileName3);
 						}
 						String modelFileName4 = "tower.obj";
 						BufferedReader fileReader4 = fileUtil
@@ -181,7 +181,7 @@ public class MyARactivity extends AndARActivity implements
 									modelName2patternName(modelFileName4)
 											+ ".patt");
 						} else {
-							Log.w("ModelLoader", "no file reader");
+							Log.w("ModelLoader", "no file reader: " + modelFileName4);
 						}
 						String modelFileName5 = "plant.obj";
 						BufferedReader fileReader5 = fileUtil
@@ -198,9 +198,9 @@ public class MyARactivity extends AndARActivity implements
 									modelName2patternName(modelFileName5)
 											+ ".patt");
 						} else {
-							Log.w("ModelLoader", "no file reader");
+							Log.w("ModelLoader", "no file reader: " + modelFileName5);
 						}
-					}
+//					}
 					if (Config.DEBUG)
 						Debug.stopMethodTracing();
 				} catch (IOException e) {
