@@ -70,25 +70,25 @@ public class Model implements Serializable{
 		return materials;
 	}
 
-	public void setScale(float f) {
+	public void addScale(float f) {
 		this.scale += f;
 		if(this.scale < 0.0001f)
 			this.scale = 0.0001f;
 	}
 
-	public void setXrot(float dY) {
+	public void addXrot(float dY) {
 		this.xrot += dY;
 	}
 
-	public void setYrot(float dX) {
+	public void addYrot(float dX) {
 		this.yrot += dX;
 	}
 
-	public void setXpos(float f) {
+	public void addXpos(float f) {
 		this.xpos += f;
 	}
 
-	public void setYpos(float f) {
+	public void addYpos(float f) {
 		this.ypos += f;
 	}
 	
