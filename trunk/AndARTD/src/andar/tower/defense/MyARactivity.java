@@ -3,13 +3,11 @@ package andar.tower.defense;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-
-import org.apache.http.util.LangUtils;
+import java.util.ArrayList;
 
 import android.app.ProgressDialog;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
-import android.graphics.drawable.GradientDrawable.Orientation;
+import android.graphics.Point;
 import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,8 +21,9 @@ import edu.dhbw.andar.exceptions.AndARException;
 public class MyARactivity extends AndARActivity implements
 		SurfaceHolder.Callback {
 
+	private Model enemy1;
+	
 	private Model model;
-	private Model model2;
 	private Model model3;
 	private Model model4;
 	private Model model5;
@@ -86,7 +85,8 @@ public class MyARactivity extends AndARActivity implements
 
 			if (modelName.equals("plant.obj")) {
 				patternName = "marker_rupee16";
-			} else if (modelName.equals("chair.obj")) {
+			} else if (modelName.equals("superman.obj")) {
+				// the designated map-marker
 				patternName = "marker_fisch16";
 			} else if (modelName.equals("tower.obj")) {
 				patternName = "marker_peace16";
@@ -132,23 +132,7 @@ public class MyARactivity extends AndARActivity implements
 									modelName2patternName(modelFileName)
 											+ ".patt");
 						}
-						String modelFileName2 = "chair.obj";
-						BufferedReader fileReader2 = fileUtil
-								.getReaderFromName(modelFileName2);
-						if (fileReader2 != null) {
-							model2 = parser.parse("Chair", fileReader2);
-							Log
-									.w(
-											"ModelLoader",
-											"model3d = new Model3D(model2, "
-													+ modelName2patternName(modelFileName2)
-													+ ".patt");
-							model3d2 = new Model3D(model2,
-									modelName2patternName(modelFileName2)
-											+ ".patt");
-						} else {
-							Log.w("ModelLoader", "no file reader: " + modelFileName2);
-						}
+	
 						String modelFileName3 = "towergreen.obj";
 						BufferedReader fileReader3 = fileUtil
 								.getReaderFromName(modelFileName3);
@@ -199,6 +183,42 @@ public class MyARactivity extends AndARActivity implements
 											+ ".patt");
 						} else {
 							Log.w("ModelLoader", "no file reader: " + modelFileName5);
+						}
+						
+						//Init enemy on map-marker
+						String enemyFileName1 = "superman.obj";
+						BufferedReader fileReader2 = fileUtil
+								.getReaderFromName(enemyFileName1);
+						if (fileReader2 != null) {
+							enemy1 = parser.parse("Enemy1", fileReader2);
+							ArrayList<Point> way = new ArrayList<Point>();
+							/* In normal view distance you can see a model 
+							 * on screen in a range of:
+							 * model.xpos/model.ypos: (-30..+30)/(-30..+30) */
+							way.add(new Point(-30, -30));
+							way.add(new Point(0, -10));
+							way.add(new Point(20, 30));
+							way.add(new Point(-30, -30));
+							way.add(new Point(20, 30));
+							way.add(new Point(-30, -30));
+							way.add(new Point(20, 30));
+							way.add(new Point(-30, -30));
+							way.add(new Point(20, 30));
+							way.add(new Point(-30, -30));
+							way.add(new Point(20, 30));
+							way.add(new Point(-30, -30));
+							enemy1.way = way;
+							Log
+									.w(
+											"ModelLoader",
+											"model3d = new Model3D(enemy1, "
+													+ modelName2patternName(enemyFileName1)
+													+ ".patt");
+							model3d2 = new Model3D(enemy1,
+									modelName2patternName(enemyFileName1)
+											+ ".patt");
+						} else {
+							Log.w("ModelLoader", "no file reader: " + enemyFileName1);
 						}
 //					}
 					if (Config.DEBUG)

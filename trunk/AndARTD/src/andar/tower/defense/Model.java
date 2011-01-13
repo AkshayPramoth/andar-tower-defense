@@ -1,15 +1,22 @@
 package andar.tower.defense;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import android.graphics.Point;
+import android.util.Log;
+
 public class Model implements Serializable {
 	// position/rotation/scale
+	private static final String tag = "Model";
 	public float xrot = 90;
 	public float yrot = 0;
 	public float zrot = 0;
+	/* in normal view distance you can see a model 
+	 * on screen in a range of x/y: (-30..+30)/(-30..+30) */
 	public float xpos = 0;
 	public float ypos = 0;
 	public float zpos = 0;
@@ -17,6 +24,19 @@ public class Model implements Serializable {
 	public int STATE = STATE_DYNAMIC;
 	public static final int STATE_DYNAMIC = 0;
 	public static final int STATE_FINALIZED = 1;
+	
+	/* In unity(model.xpos) per second
+	 * negative values don't make sense here.
+	 * In normal view distance you can see a model 
+	 * on screen in a range of:
+	 * model.xpos/model.ypos: (-30..+30)/(-30..+30)
+	 */
+	public int velocity; 
+	
+	public ArrayList<Point> way;
+	
+	// timestamp of last position-update in milliseconds
+	private double lastPosUpdate = 0; 
 
 	private Vector<Group> groups = new Vector<Group>();
 	/**
@@ -27,7 +47,15 @@ public class Model implements Serializable {
 	public Model() {
 		// add default material
 		materials.put("default", new Material("default"));
+		way = null;
+		velocity = 6;
 	}
+	
+//	/**
+//	 * for movable objects:
+//	 * overwrite to calculate new position depending on path and velocity
+//	 */
+//	public void positionUpdate() {};
 
 	public void addMaterial(Material mat) {
 		// mat.finalize();
@@ -58,6 +86,41 @@ public class Model implements Serializable {
 
 	public HashMap<String, Material> getMaterials() {
 		return materials;
+	}
+	
+	/**
+	 * calculate new position on path depending on velocity
+	 */
+	public void positionUpdate() {
+		double timestamp = System.currentTimeMillis();
+		
+		if (way != null && lastPosUpdate != 0) {
+			double deltaTime = timestamp-lastPosUpdate;
+			double wayToGo = velocity * deltaTime / 1000;
+			/* move in direction of next point on the way */
+			Point point = way.get(0);
+			double deltaX = point.x - xpos;
+			double deltaY = point.y - ypos;
+			Log.i(tag, "deltaXY: " + deltaX + " / " + deltaY); 
+			double hypo = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+			float scale = (float) (wayToGo / hypo);
+			if (deltaX < 0.1 && deltaY <0.1) {
+				// next step would exceed actual way point
+				xpos = point.x;
+				ypos = point.y;
+				way.remove(0);
+				if (way.size() == 0) {
+					way = null;
+				}
+				Log.i(tag, "reachedpoint " + this + " to (x/y): " + this.xpos + " / " + this.ypos);
+			} else {
+				addXpos((float) (deltaX * scale));
+				addYpos((float) (deltaY * scale));
+				Log.i(tag, "newxy " + this + " to (x/y): " + this.xpos + " / " + this.ypos);
+			}
+		}
+		
+		lastPosUpdate = timestamp; 
 	}
 
 	public void addScale(float f) {

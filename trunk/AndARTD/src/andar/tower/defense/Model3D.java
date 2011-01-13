@@ -74,6 +74,7 @@ public class Model3D extends ARObject implements Serializable{
 	@Override
 	public void draw(GL10 gl) {
 		super.draw(gl);
+		model.positionUpdate();
 		
 		//gl = (GL10) GLDebugHelper.wrap(gl, GLDebugHelper.CONFIG_CHECK_GL_ERROR, log);
 		//do positioning:
