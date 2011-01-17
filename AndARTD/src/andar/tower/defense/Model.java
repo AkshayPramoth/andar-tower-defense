@@ -12,6 +12,8 @@ import android.util.Log;
 public class Model implements Serializable {
 	// position/rotation/scale
 	private static final String tag = "Model";
+	
+	public Model3D model3D;
 	public float xrot = 90;
 	public float yrot = 0;
 	public float zrot = 0;
