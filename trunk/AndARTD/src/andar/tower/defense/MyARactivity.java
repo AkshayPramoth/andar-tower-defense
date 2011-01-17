@@ -22,16 +22,8 @@ public class MyARactivity extends AndARActivity implements
 		SurfaceHolder.Callback {
 
 	private Model enemy1;
-	
-	private Model model;
-	private Model model3;
-	private Model model4;
-	private Model model5;
-	private Model3D model3d;
-	private Model3D model3d2;
-	private Model3D model3d3;
-	private Model3D model3d4;
-	private Model3D model3d5;
+
+	private Model[] models = null;
 	private ProgressDialog waitDialog;
 	private Resources res;
 	public static final boolean DEBUG = false;
@@ -70,7 +62,7 @@ public class MyARactivity extends AndARActivity implements
 		// this is done here, to assure the surface was already created, so that
 		// the preview can be started
 		// after loading the model
-		if (model == null) {
+		if (models == null) {
 			waitDialog = ProgressDialog.show(this, "", getResources().getText(
 					R.string.loading), true);
 			waitDialog.show();
@@ -80,13 +72,25 @@ public class MyARactivity extends AndARActivity implements
 
 	private class ModelLoader extends AsyncTask<Void, Void, Void> {
 
+		BaseFileUtil fileUtil;
+		BufferedReader fileReader;
+		ObjParser parser;
+		private String tag = "ModelLoader";
+
+		public ModelLoader() {
+			super();
+			fileUtil = new AssetsFileUtil(getResources().getAssets());
+			fileUtil.setBaseFolder("models/");
+			parser = new ObjParser(fileUtil);
+		}
+
 		private String modelName2patternName(String modelName) {
-			String patternName = "android";
+			// the designated map-marker
+			String patternName = "marker_fisch16";
 
 			if (modelName.equals("plant.obj")) {
 				patternName = "marker_rupee16";
 			} else if (modelName.equals("superman.obj")) {
-				// the designated map-marker
 				patternName = "marker_fisch16";
 			} else if (modelName.equals("tower.obj")) {
 				patternName = "marker_peace16";
@@ -102,125 +106,70 @@ public class MyARactivity extends AndARActivity implements
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			String modelFileName = "tower.obj";
-			BaseFileUtil fileUtil = null;
-			File modelFile = null;
-			fileUtil = new AssetsFileUtil(getResources().getAssets());
-			fileUtil.setBaseFolder("models/");
+			Model model;
+			String[] towerModels = { "tower.obj", "towergreen.obj",
+					"plant.obj", "bench.obj" };
+			String[] enemyModels = { "superman.obj" }; // also bullets...
+			models = new Model[towerModels.length + enemyModels.length];
 
+			for (int i = 0; i < towerModels.length; i++) {
+				model = loadModelFromFile(towerModels[i]);
+				models[i] = model;
+			}
+
+			// load enemies with pathes to go
+			ArrayList<Point> way = new ArrayList<Point>();
+			/*
+			 * In normal view distance you can see a model on screen in a range
+			 * of: model.xpos/model.ypos: (-30..+30)/(-30..+30)
+			 */
+			way.add(new Point(-30, -30));
+			way.add(new Point(0, -10));
+			way.add(new Point(20, 30));
+			way.add(new Point(-30, -30));
+			way.add(new Point(20, 30));
+			way.add(new Point(-30, -30));
+			way.add(new Point(20, 30));
+			way.add(new Point(-30, -30));
+			way.add(new Point(20, 30));
+			way.add(new Point(-30, -30));
+			way.add(new Point(20, 30));
+			way.add(new Point(-30, -30));
+			for (int i = 0; i < enemyModels.length; i++) {
+				model = loadModelFromFile(enemyModels[i]);
+				model.way = way;
+				models[towerModels.length + i] = model;
+			}
+
+			return null;
+
+		}
+
+		private Model loadModelFromFile(String modelFileName) {
 			// read the model file:
+			Model model = null;
 			if (modelFileName.endsWith(".obj")) {
-				System.out.println(modelFileName);
-				ObjParser parser = new ObjParser(fileUtil);
 				try {
 					if (Config.DEBUG)
 						Debug.startMethodTracing("AndObjViewer");
 
-//					if (fileUtil != null) {
-
-						BufferedReader fileReader = fileUtil
-								.getReaderFromName(modelFileName);
+					if (fileUtil != null) {
+						fileReader = fileUtil.getReaderFromName(modelFileName);
 						if (fileReader != null) {
-							model = parser.parse("Model", fileReader);
-							Log
-									.w(
-											"ModelLoader",
-											"model3d = new Model3D(model, "
-													+ modelName2patternName(modelFileName)
-													+ ".patt");
-							model3d = new Model3D(model,
+							model = parser.parse(modelFileName.substring(0,
+									modelFileName.length() - 4), fileReader);
+							Log.w(tag, "model3d = new Model3D(model, "
+									+ modelName2patternName(modelFileName)
+									+ ".patt");
+							Model3D model3d = new Model3D(model,
 									modelName2patternName(modelFileName)
 											+ ".patt");
-						}
-	
-						String modelFileName3 = "towergreen.obj";
-						BufferedReader fileReader3 = fileUtil
-								.getReaderFromName(modelFileName3);
-						if (fileReader3 != null) {
-							model3 = parser.parse("towergreen", fileReader3);
-							Log
-									.w(
-											"ModelLoader",
-											"model3d = new Model3D(model3, "
-													+ modelName2patternName(modelFileName3)
-													+ ".patt");
-							model3d3 = new Model3D(model3,
-									modelName2patternName(modelFileName3)
-											+ ".patt");
+							model.model3D = model3d;
 						} else {
-							Log.w("ModelLoader", "no file reader: " + modelFileName3);
+							Log.w("ModelLoader", "no file reader: "
+									+ modelFileName);
 						}
-						String modelFileName4 = "tower.obj";
-						BufferedReader fileReader4 = fileUtil
-								.getReaderFromName(modelFileName4);
-						if (fileReader4 != null) {
-							model4 = parser.parse("tower", fileReader4);
-							Log
-									.w(
-											"ModelLoader",
-											"model3d = new Model3D(model4, "
-													+ modelName2patternName(modelFileName4)
-													+ ".patt");
-							model3d4 = new Model3D(model4,
-									modelName2patternName(modelFileName4)
-											+ ".patt");
-						} else {
-							Log.w("ModelLoader", "no file reader: " + modelFileName4);
-						}
-						String modelFileName5 = "plant.obj";
-						BufferedReader fileReader5 = fileUtil
-								.getReaderFromName(modelFileName5);
-						if (fileReader5 != null) {
-							model5 = parser.parse("Plant", fileReader5);
-							Log
-									.w(
-											"ModelLoader",
-											"model3d = new Model3D(model5, "
-													+ modelName2patternName(modelFileName5)
-													+ ".patt");
-							model3d5 = new Model3D(model5,
-									modelName2patternName(modelFileName5)
-											+ ".patt");
-						} else {
-							Log.w("ModelLoader", "no file reader: " + modelFileName5);
-						}
-						
-						//Init enemy on map-marker
-						String enemyFileName1 = "superman.obj";
-						BufferedReader fileReader2 = fileUtil
-								.getReaderFromName(enemyFileName1);
-						if (fileReader2 != null) {
-							enemy1 = parser.parse("Enemy1", fileReader2);
-							ArrayList<Point> way = new ArrayList<Point>();
-							/* In normal view distance you can see a model 
-							 * on screen in a range of:
-							 * model.xpos/model.ypos: (-30..+30)/(-30..+30) */
-							way.add(new Point(-30, -30));
-							way.add(new Point(0, -10));
-							way.add(new Point(20, 30));
-							way.add(new Point(-30, -30));
-							way.add(new Point(20, 30));
-							way.add(new Point(-30, -30));
-							way.add(new Point(20, 30));
-							way.add(new Point(-30, -30));
-							way.add(new Point(20, 30));
-							way.add(new Point(-30, -30));
-							way.add(new Point(20, 30));
-							way.add(new Point(-30, -30));
-							enemy1.way = way;
-							Log
-									.w(
-											"ModelLoader",
-											"model3d = new Model3D(enemy1, "
-													+ modelName2patternName(enemyFileName1)
-													+ ".patt");
-							model3d2 = new Model3D(enemy1,
-									modelName2patternName(enemyFileName1)
-											+ ".patt");
-						} else {
-							Log.w("ModelLoader", "no file reader: " + enemyFileName1);
-						}
-//					}
+					}
 					if (Config.DEBUG)
 						Debug.stopMethodTracing();
 				} catch (IOException e) {
@@ -232,7 +181,7 @@ public class MyARactivity extends AndARActivity implements
 					e.printStackTrace();
 				}
 			}
-			return null;
+			return model;
 		}
 
 		@Override
@@ -242,12 +191,10 @@ public class MyARactivity extends AndARActivity implements
 
 			// register model
 			try {
-				if (model3d != null) {
-					artoolkit.registerARObject(model3d);
-					artoolkit.registerARObject(model3d2);
-					artoolkit.registerARObject(model3d3);
-					artoolkit.registerARObject(model3d4);
-					artoolkit.registerARObject(model3d5);
+				if (models != null) {
+					for (Model model : models) {
+						artoolkit.registerARObject(model.model3D);
+					}
 				}
 			} catch (AndARException e) {
 				Log.d("on PostExecute", "ERROR ");
