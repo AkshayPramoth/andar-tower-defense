@@ -90,6 +90,8 @@ public class MyARactivity extends AndARActivity implements
 
 			if (modelName.equals("plant.obj")) {
 				patternName = "marker_rupee16";
+			} else if (modelName.equals("tank3.obj")) {
+				patternName = "marker_rupee16";
 			} else if (modelName.equals("superman.obj")) {
 				patternName = "marker_fisch16";
 			} else if (modelName.equals("tower.obj")) {
@@ -107,8 +109,7 @@ public class MyARactivity extends AndARActivity implements
 		protected Void doInBackground(Void... params) {
 
 			Model model;
-			String[] towerModels = { "tower.obj", "towergreen.obj",
-					"plant.obj", "bench.obj" };
+			String[] towerModels = { "tower.obj", "towergreen.obj", "bench.obj", "tank3.obj" };
 			String[] enemyModels = { "superman.obj" }; // also bullets...
 			models = new Model[towerModels.length + enemyModels.length];
 

@@ -1,0 +1,12 @@
+# Blender3D MTL File: tank.blend
+# Material Count: 1
+newmtl GreenColor
+Ns 7.843137
+Ka 0.000000 0.000000 0.000000
+Kd 0.178823 0.241569 0.138039
+Ks 0.000000 0.000000 0.000000
+Ni 1.500000
+d 0.000000
+illum 2
+
+
