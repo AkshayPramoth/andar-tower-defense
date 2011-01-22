@@ -1,7 +1,6 @@
 package andar.tower.defense;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -29,6 +28,8 @@ public class MyARactivity extends AndARActivity implements
 	public static final boolean DEBUG = false;
 	ARToolkit artoolkit;
 
+	private andar.tower.defense.GameThread gameThread;
+
 	public MyARactivity() {
 		super(false);
 	}
@@ -43,6 +44,16 @@ public class MyARactivity extends AndARActivity implements
 		artoolkit = getArtoolkit();
 		// getSurfaceView().setOnTouchListener(new TouchEventHandler());
 		getSurfaceView().getHolder().addCallback(this);
+		
+		GameCenter gameCenter = new GameCenter
+		("center", "marker_fisch16.patt", 137.0, new double[]{0,0});//170
+		try {
+			artoolkit.registerARObject(gameCenter);
+		} catch (AndARException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		gameThread = new GameThread(gameCenter);
 	}
 
 	/**
@@ -76,6 +87,7 @@ public class MyARactivity extends AndARActivity implements
 		BufferedReader fileReader;
 		ObjParser parser;
 		private String tag = "ModelLoader";
+		private Model center;
 
 		public ModelLoader() {
 			super();
@@ -93,7 +105,7 @@ public class MyARactivity extends AndARActivity implements
 			} else if (modelName.equals("tank3.obj")) {
 				patternName = "marker_rupee16";
 			} else if (modelName.equals("superman.obj")) {
-				patternName = "marker_fisch16";
+				patternName = "marker_rupee16";
 			} else if (modelName.equals("tower.obj")) {
 				patternName = "marker_peace16";
 			} else if (modelName.equals("bench.obj")) {
@@ -109,13 +121,27 @@ public class MyARactivity extends AndARActivity implements
 		protected Void doInBackground(Void... params) {
 
 			Model model;
-			String[] towerModels = { "tower.obj", "towergreen.obj", "bench.obj", "tank3.obj" };
+			String centerModel = "energy.obj";
+//			String[] towerModels = { "tower.obj", "towergreen.obj", "bench.obj", "tank3.obj" };
+			String[] towerModels = { "tank3.obj" };
 			String[] enemyModels = { "superman.obj" }; // also bullets...
-			models = new Model[towerModels.length + enemyModels.length];
+			models = new Model[1+towerModels.length + enemyModels.length];
+			int i = 0;
 
-			for (int i = 0; i < towerModels.length; i++) {
+			// load red circle on centermarker
+			center = loadModelFromFile(centerModel);
+			center.center = center;
+			center.name = "center";
+			models[i] = center;
+			i++;
+			
+
+			
+			for (i = 0; i < towerModels.length; i++) {
 				model = loadModelFromFile(towerModels[i]);
-				models[i] = model;
+				model.center = center;
+				model.name = towerModels[i];
+				models[1+i] = model;
 			}
 
 			// load enemies with pathes to go
@@ -136,10 +162,12 @@ public class MyARactivity extends AndARActivity implements
 			way.add(new Point(-30, -30));
 			way.add(new Point(20, 30));
 			way.add(new Point(-30, -30));
-			for (int i = 0; i < enemyModels.length; i++) {
+			for (i = 0; i < enemyModels.length; i++) {
 				model = loadModelFromFile(enemyModels[i]);
 				model.way = way;
-				models[towerModels.length + i] = model;
+				model.center = center;
+				model.name = enemyModels[i];
+				models[1+towerModels.length + i] = model;
 			}
 
 			return null;
@@ -193,9 +221,12 @@ public class MyARactivity extends AndARActivity implements
 			// register model
 			try {
 				if (models != null) {
+					Model3D model3d = null;
 					for (Model model : models) {
 						artoolkit.registerARObject(model.model3D);
+						model3d = model.model3D;
 					}
+					gameThread.tower = model3d;
 				}
 			} catch (AndARException e) {
 				Log.d("on PostExecute", "ERROR ");
@@ -203,6 +234,8 @@ public class MyARactivity extends AndARActivity implements
 			}
 			Log.d("Starting Preview", "Preview starting  ");
 			startPreview();
+			
+
 		}
 	}
 
