@@ -50,7 +50,7 @@ public class Model3D extends ARObject implements Serializable {
 	}
 	
 	public synchronized void update(long time, GameCenter center) {
-//		Log.i(tag, "is model " + this.model.name + " visible? " + this.isVisible());
+		Log.i(tag, "is model " + this.model.name + " visible? " + this.isVisible());
 		if(this.isVisible() && center.isVisible()) {
 			double[] transmat = this.getTransMatrix();
 			double[] centerMat = center.getInvTransMat();
