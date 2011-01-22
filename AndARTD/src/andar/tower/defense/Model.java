@@ -12,6 +12,7 @@ import android.util.Log;
 public class Model implements Serializable {
 	// position/rotation/scale
 	private static final String tag = "Model";
+	public String name;
 	
 	public Model3D model3D;
 	public float xrot = 90;
@@ -26,6 +27,8 @@ public class Model implements Serializable {
 	public int STATE = STATE_DYNAMIC;
 	public static final int STATE_DYNAMIC = 0;
 	public static final int STATE_FINALIZED = 1;
+	
+	public Model center;
 	
 	/* In unity(model.xpos) per second
 	 * negative values don't make sense here.
