@@ -100,13 +100,13 @@ public class MyARactivity extends AndARActivity implements
 			// the designated map-marker
 			String patternName = "marker_fisch16";
 
-			if (modelName.equals("plant.obj")) {
+			if (modelName.equals("Tower.obj")) {
 				patternName = "marker_rupee16";
 			} else if (modelName.equals("tank3.obj")) {
 				patternName = "marker_rupee16";
 			} else if (modelName.equals("superman.obj")) {
 				patternName = "marker_rupee16";
-			} else if (modelName.equals("tower.obj")) {
+			} else if (modelName.equals("Airplane.obj")) {
 				patternName = "marker_peace16";
 			} else if (modelName.equals("bench.obj")) {
 				patternName = "marker_at16";
@@ -123,7 +123,7 @@ public class MyARactivity extends AndARActivity implements
 			Model model;
 			String centerModel = "energy.obj";
 //			String[] towerModels = { "tower.obj", "towergreen.obj", "bench.obj", "tank3.obj" };
-			String[] towerModels = { "tank3.obj" };
+			String[] towerModels = { "Tower.obj", "Airplane.obj" };
 			String[] enemyModels = { "superman.obj" }; // also bullets...
 			models = new Model[1+towerModels.length + enemyModels.length];
 			int i = 0;
