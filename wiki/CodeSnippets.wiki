@@ -10,6 +10,7 @@ The solution is very simple - use a normal view (Relative / Linear / etc) with n
 = Details =
 
 *Put this in onCreate()*:
+{{{
         // add layout 
         controlInflater = LayoutInflater.from(getBaseContext());
         View viewControl = controlInflater.inflate(R.layout.control, null);
@@ -17,9 +18,11 @@ The solution is very simple - use a normal view (Relative / Linear / etc) with n
             = new LayoutParams(LayoutParams.FILL_PARENT,
             LayoutParams.FILL_PARENT);
         this.addContentView(viewControl, layoutParamsControl);
-
+}}}
 
 *This is the xml-layout control.xml:*
+
+{{{
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout android:layout_width="fill_parent"
@@ -48,3 +51,4 @@ The solution is very simple - use a normal view (Relative / Linear / etc) with n
         android:layout_alignParentTop="true" android:layout_alignParentRight="true"
         android:layout_marginTop="11dip" android:layout_marginRight="5dip" />
 </RelativeLayout>
+}}}
