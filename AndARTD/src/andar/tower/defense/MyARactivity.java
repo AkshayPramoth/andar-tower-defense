@@ -12,7 +12,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
+import android.view.View;
+import android.widget.RelativeLayout.LayoutParams;
 import edu.dhbw.andar.ARToolkit;
 import edu.dhbw.andar.AndARActivity;
 import edu.dhbw.andar.exceptions.AndARException;
@@ -53,9 +56,20 @@ public class MyARactivity extends AndARActivity implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		createHUD();
 		gameThread = new GameThread(gameCenter);
+		
 	}
 
+	public void createHUD() { 
+		  // add layout 
+        LayoutInflater controlInflater = LayoutInflater.from(getBaseContext());
+        View viewControl = controlInflater.inflate(R.layout.hud, null);
+        LayoutParams layoutParamsControl
+            = new LayoutParams(LayoutParams.FILL_PARENT,
+            LayoutParams.FILL_PARENT);
+        this.addContentView(viewControl, layoutParamsControl);
+	}
 	/**
 	 * Inform the user about exceptions that occurred in background threads.
 	 */
