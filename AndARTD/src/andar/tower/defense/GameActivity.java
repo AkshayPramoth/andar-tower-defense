@@ -24,7 +24,7 @@ import edu.dhbw.andar.ARToolkit;
 import edu.dhbw.andar.AndARActivity;
 import edu.dhbw.andar.exceptions.AndARException;
 
-public class MyARactivity extends AndARActivity implements
+public class GameActivity extends AndARActivity implements
 		SurfaceHolder.Callback {
 
 	private Model enemy1;
@@ -44,7 +44,7 @@ public class MyARactivity extends AndARActivity implements
 
 	TextView hud_y;
 
-	public MyARactivity() {
+	public GameActivity() {
 		super(false);
 	}
 

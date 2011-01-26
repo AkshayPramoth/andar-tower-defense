@@ -2,5 +2,5 @@
 <resources>
     <string name="hello">Hello World, AndARTD!</string>
     <string name="app_name">AndARTD</string>
-    <string name="loading">laden</string>
+    <string name="loading">Lädt...</string>
 </resources>
