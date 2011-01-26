@@ -1,4 +1,4 @@
-package andar.tower.defense;
+package andar.tower.defense.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import andar.tower.defense.parser.Group;
+import andar.tower.defense.parser.Material;
+import andar.tower.defense.util.BaseFileUtil;
 import android.graphics.Point;
 import android.util.Log;
 

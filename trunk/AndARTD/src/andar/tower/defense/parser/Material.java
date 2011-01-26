@@ -1,4 +1,4 @@
-package andar.tower.defense;
+package andar.tower.defense.parser;
 
 
 
@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 import java.nio.FloatBuffer;
 
+import andar.tower.defense.util.BaseFileUtil;
+import andar.tower.defense.util.MemUtil;
 import android.graphics.Bitmap;
 
 public class Material implements Serializable {

@@ -14,6 +14,9 @@ import javax.microedition.khronos.opengles.GL10;
 
 
 
+import andar.tower.defense.model.Model3D;
+import andar.tower.defense.parser.Vector3D;
+import andar.tower.defense.util.MemUtil;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.util.Log;

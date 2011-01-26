@@ -1,5 +1,6 @@
 package andar.tower.defense;
 
+import andar.tower.defense.model.Model3D;
 import android.os.Handler;
 import android.os.Message;
 
