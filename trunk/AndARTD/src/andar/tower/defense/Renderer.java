@@ -44,7 +44,7 @@ public class Renderer implements GLSurfaceView.Renderer {
 	
 	@Override
 	public void onDrawFrame(GL10 gl) {
-		if(MyARactivity.DEBUG) {
+		if(GameActivity.DEBUG) {
 			frame++;
 			time=System.currentTimeMillis();
 			if (time - timebase > 1000) {
