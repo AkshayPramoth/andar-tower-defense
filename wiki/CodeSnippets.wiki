@@ -15,6 +15,7 @@ The solution is very simple - use a normal view (Relative / Linear / etc) with n
 	LayoutInflater controlInflater = null;
 }}}
 
+
 *Put this in onCreate() of MyARactivity*:
 {{{
         // add layout 
@@ -25,6 +26,7 @@ The solution is very simple - use a normal view (Relative / Linear / etc) with n
             LayoutParams.FILL_PARENT);
         this.addContentView(viewControl, layoutParamsControl);
 }}}
+
 
 *This is the xml-layout control.xml:*
 
