@@ -9,6 +9,10 @@ The solution is very simple - use a normal view (Relative / Linear / etc) with n
 
 = Details =
 
+*Create a local variable for LayoutInflater*:
+
+	LayoutInflater controlInflater = null;
+
 *Put this in onCreate() of MyARactivity*:
 {{{
         // add layout 
