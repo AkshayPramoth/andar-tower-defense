@@ -52,6 +52,7 @@ public class GameActivity extends AndARActivity implements
 	TextView hud_x;
 
 	TextView hud_y;
+	private GameContext gameContext;
 
 	public GameActivity() {
 		super(false);
@@ -77,7 +78,8 @@ public class GameActivity extends AndARActivity implements
 			e.printStackTrace();
 		}
 		createHUD();
-		gameThread = new GameThread(handler, gameCenter);
+		gameContext = new GameContext(100, gameCenter);
+		gameThread = new GameThread(handler, gameContext);
 		
 	}
 
@@ -210,14 +212,19 @@ public class GameActivity extends AndARActivity implements
 			way.add(new Point(-30, -30));
 			way.add(new Point(20, 30));
 			way.add(new Point(-30, -30));
+			
+			model = null;
 			for (i = 0; i < enemyModels.length; i++) {
 				model = loadModelFromFile(enemyModels[i]);
-				model.way = way;
 				model.center = center;
 				model.name = enemyModels[i];
 				models[1+towerModels.length + i] = model;
 			}
 
+			//only the last one moves
+			if (model != null)
+				model.way = way;
+			
 			return null;
 
 		}

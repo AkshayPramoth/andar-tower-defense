@@ -7,7 +7,7 @@ import android.os.Message;
 public class GameThread extends Thread {
 
 	// Game objects:
-	private GameCenter center;
+	private GameContext gameContext;
 	private boolean running = true;
 
 	// time
@@ -31,9 +31,9 @@ public class GameThread extends Thread {
 	 * @param paddle1
 	 * @param paddle2
 	 */
-	public GameThread(GameActivityHandler gameActivityHandler, GameCenter center) {
+	public GameThread(GameActivityHandler gameActivityHandler, GameContext gameContext) {
 		this.gameActivityHandler = gameActivityHandler;
-		this.center = center;
+		this.gameContext = gameContext;
 		setDaemon(true);
 		start();
 	}
@@ -58,12 +58,14 @@ public class GameThread extends Thread {
 				td = currTime - prevTime;
 				prevTime = currTime;
 
-				center.update(td);
+				gameContext.gameCenter.update(td);
 
 				// update all position
-				tower.update(td, center);
+				tower.update(td, gameContext.gameCenter);
 				updateHUD(tower.getX(), tower.getY());
 
+				
+				
 				// check for collisions
 				collision = false;
 				// if(ball.getVx() > 0) {
