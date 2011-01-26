@@ -11,7 +11,9 @@ The solution is very simple - use a normal view (Relative / Linear / etc) with n
 
 *Create a local variable for LayoutInflater*:
 
+{{{
 	LayoutInflater controlInflater = null;
+}}}
 
 *Put this in onCreate() of MyARactivity*:
 {{{
