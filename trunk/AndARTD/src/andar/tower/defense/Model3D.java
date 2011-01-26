@@ -10,6 +10,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLUtils;
 import android.util.Log;
+import android.widget.TextView;
 import edu.dhbw.andar.ARObject;
 import edu.dhbw.andar.ARToolkit;
 
@@ -26,6 +27,9 @@ public class Model3D extends ARObject implements Serializable {
 	private Group[] texturedGroups;
 	private Group[] nonTexturedGroups;
 	private HashMap<Material, Integer> textureIDs = new HashMap<Material, Integer>();
+	private float x = 0;
+	private float y = 0;
+	private float z = 0;
 
 	public Model3D(Model model, String patternName) {
 		super("model", patternName, 80.0, new double[] { 0, 0 });
@@ -57,9 +61,9 @@ public class Model3D extends ARObject implements Serializable {
 			double[] coordsInCenterCS = new double[12];
 			ARToolkit.arUtilMatMul(centerMat, transmat, coordsInCenterCS);
 			float halfWidth = 0;
-			float x = (float) coordsInCenterCS[3] - halfWidth;
-			float y = (float) coordsInCenterCS[7] - halfWidth;
-			float z = (float) coordsInCenterCS[11] - halfWidth;
+			x = (float) coordsInCenterCS[3] - halfWidth;
+			y = (float) coordsInCenterCS[7] - halfWidth;
+			z = (float) coordsInCenterCS[11] - halfWidth;
 			Log.i(tag, "coords of " + model.name + " to center x/y/z: " + x
 					+ "/" + y + "/" + z);		
 		} else {
@@ -233,5 +237,17 @@ public class Model3D extends ARObject implements Serializable {
 
 		private StringBuilder mBuilder = new StringBuilder();
 
+	}
+
+	public float getX() {
+		return x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public float getZ() {
+		return z;
 	}
 }

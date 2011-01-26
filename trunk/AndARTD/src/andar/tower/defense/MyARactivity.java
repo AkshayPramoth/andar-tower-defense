@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -11,10 +12,13 @@ import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 import edu.dhbw.andar.ARToolkit;
 import edu.dhbw.andar.AndARActivity;
@@ -24,6 +28,7 @@ public class MyARactivity extends AndARActivity implements
 		SurfaceHolder.Callback {
 
 	private Model enemy1;
+	private static final String tag = "GameActivity";
 
 	private Model[] models = null;
 	private ProgressDialog waitDialog;
@@ -32,6 +37,12 @@ public class MyARactivity extends AndARActivity implements
 	ARToolkit artoolkit;
 
 	private andar.tower.defense.GameThread gameThread;
+
+	private GameActivityHandler handler;
+
+	TextView hud_x;
+
+	TextView hud_y;
 
 	public MyARactivity() {
 		super(false);
@@ -57,18 +68,38 @@ public class MyARactivity extends AndARActivity implements
 			e.printStackTrace();
 		}
 		createHUD();
-		gameThread = new GameThread(gameCenter);
+		gameThread = new GameThread(handler, gameCenter);
 		
 	}
 
 	public void createHUD() { 
-		  // add layout 
+	
+		// add layout 
         LayoutInflater controlInflater = LayoutInflater.from(getBaseContext());
         View viewControl = controlInflater.inflate(R.layout.hud, null);
         LayoutParams layoutParamsControl
             = new LayoutParams(LayoutParams.FILL_PARENT,
             LayoutParams.FILL_PARENT);
         this.addContentView(viewControl, layoutParamsControl);
+        
+        //Handler for UI callbacks
+        hud_x = (TextView) findViewById(R.id.tower_x); 
+        hud_y = (TextView) findViewById(R.id.tower_y); 
+        
+        handler = new GameActivityHandler() {
+        	@Override
+        	public void handleMessage(Message msg) {
+        		if (msg.what == UPDATE_X_Y) {
+        			int x=msg.arg1;
+        			int y=msg.arg2;
+        			hud_x.setText("Tower rel. x: " + x);
+        			hud_y.setText("Tower rel. y: " + y);
+        		} else {
+        			Log.i(tag, "Unknown handle with what-code: " + msg.what);
+        		}
+        	}
+        };
+        
 	}
 	/**
 	 * Inform the user about exceptions that occurred in background threads.

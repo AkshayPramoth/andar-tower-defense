@@ -3,14 +3,14 @@
 <RelativeLayout android:layout_width="fill_parent"
     android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView android:id="@+id/enemies_killed"
+    <TextView android:id="@+id/tower_y"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="enemies passed: 2" android:textSize="18sp"
-        android:textColor="#ffcccccc" android:layout_below="@+id/enemies_passed"
+        android:text="Tower rel. y: 0" android:textSize="18sp"
+        android:textColor="#ffcccccc" android:layout_below="@+id/tower_x"
         android:layout_alignParentLeft="true" android:layout_marginLeft="5dip" />
-    <TextView android:id="@+id/enemies_passed"
+    <TextView android:id="@+id/tower_x"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="enemies killed: 100500" android:textSize="18sp"
+        android:text="Tower rel. x: 0" android:textSize="18sp"
         android:textColor="#ffcccccc" android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true" android:layout_marginLeft="5dip" />
     <TextView android:layout_width="wrap_content"

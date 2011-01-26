@@ -1,5 +1,8 @@
 package andar.tower.defense;
 
+import android.os.Handler;
+import android.os.Message;
+
 public class GameThread extends Thread {
 
 	// Game objects:
@@ -10,6 +13,7 @@ public class GameThread extends Thread {
 	long prevTime;
 	long currTime;
 	public Model3D tower;
+	private GameActivityHandler gameActivityHandler;
 
 	// game area limits
 	public static final float UPPERLIMITX = 200;
@@ -21,14 +25,21 @@ public class GameThread extends Thread {
 
 	/**
 	 * 
+	 * @param myARactivity 
 	 * @param ball
 	 * @param paddle1
 	 * @param paddle2
 	 */
-	public GameThread(GameCenter center) {
+	public GameThread(GameActivityHandler gameActivityHandler, GameCenter center) {
+		this.gameActivityHandler = gameActivityHandler;
 		this.center = center;
 		setDaemon(true);
 		start();
+	}
+	
+	public void updateHUD(float x, float y) {
+		Message msg = Message.obtain(gameActivityHandler, gameActivityHandler.UPDATE_X_Y, (int)x, (int)y);
+		msg.sendToTarget();
 	}
 
 	@Override
@@ -39,6 +50,7 @@ public class GameThread extends Thread {
 		long td;
 		yield();
 		boolean collision = false;
+		
 		while (running) {
 			if (tower != null) {
 				currTime = System.nanoTime();
@@ -49,6 +61,7 @@ public class GameThread extends Thread {
 
 				// update all position
 				tower.update(td, center);
+				updateHUD(tower.getX(), tower.getY());
 
 				// check for collisions
 				collision = false;
