@@ -1,4 +1,4 @@
-package andar.tower.defense;
+package andar.tower.defense.parser;
 
 
 
@@ -10,6 +10,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
+
+import andar.tower.defense.model.Model;
+import andar.tower.defense.util.BaseFileUtil;
+import andar.tower.defense.util.Util;
 
 
 /**

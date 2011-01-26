@@ -1,4 +1,4 @@
-package andar.tower.defense;
+package andar.tower.defense.model;
 
 import java.io.Serializable;
 import java.io.Writer;
@@ -8,6 +8,9 @@ import java.util.Vector;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import andar.tower.defense.GameCenter;
+import andar.tower.defense.parser.Group;
+import andar.tower.defense.parser.Material;
 import android.opengl.GLUtils;
 import android.util.Log;
 import android.widget.TextView;

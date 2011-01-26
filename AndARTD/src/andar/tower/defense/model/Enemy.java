@@ -1,4 +1,4 @@
-package andar.tower.defense;
+package andar.tower.defense.model;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package andar.tower.defense;
+package andar.tower.defense.parser;
 
 
 
@@ -9,6 +9,8 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
+
+import andar.tower.defense.util.MemUtil;
 
 
 /**
