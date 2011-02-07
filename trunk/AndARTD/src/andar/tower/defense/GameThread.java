@@ -62,13 +62,13 @@ public class GameThread extends Thread {
 				gameContext.gameCenter.update(td);
 
 				// update all position
-				tower.update(td, gameContext.gameCenter);
-				updateHUD(tower.getX(), tower.getY());
-
 				for (Enemy enemy : gameContext.enemyList) {
 					enemy.positionUpdate();
 					yield();
 				}
+				tower.update(td, gameContext.gameCenter);
+				updateHUD(tower.getX(), tower.getY());
+				tower.getNearestEnemy(gameContext.enemyList);
 				
 				
 				// check for collisions

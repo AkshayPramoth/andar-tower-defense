@@ -2,6 +2,7 @@ package andar.tower.defense.model;
 
 import java.io.Serializable;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -244,5 +245,18 @@ public class Model3D extends ARObject implements Serializable {
 
 	public float getZ() {
 		return z;
+	}
+
+	public void getNearestEnemy(ArrayList<Enemy> enemyList) {
+		int distance = 0;
+		for (Enemy enemy : enemyList) {
+			distance = getDistance(enemy);
+		}
+		
+	}
+
+	private int getDistance(Enemy enemy) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

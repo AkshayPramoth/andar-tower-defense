@@ -93,7 +93,7 @@ public class Enemy extends Model {
 			Point point = way.get(0);
 			double deltaX = point.x - xpos;
 			double deltaY = point.y - ypos;
-			Log.i(tag , "deltaXY: " + deltaX + " / " + deltaY);
+//			Log.i(tag , "deltaXY: " + deltaX + " / " + deltaY);
 			double hypo = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 			float scale = (float) (wayToGo / hypo);
 			if (deltaX < 0.1 && deltaY < 0.1) {

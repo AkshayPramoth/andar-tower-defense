@@ -190,18 +190,15 @@ public class GameActivity extends AndARActivity implements
 			 * In normal view distance you can see a model on screen in a range
 			 * of: model.xpos/model.ypos: (-30..+30)/(-30..+30)
 			 */
-			way.add(new Point(-30, -30));
-			way.add(new Point(0, -10));
-			way.add(new Point(20, 30));
-			way.add(new Point(-30, -30));
-			way.add(new Point(20, 30));
-			way.add(new Point(-30, -30));
-			way.add(new Point(20, 30));
-			way.add(new Point(-30, -30));
-			way.add(new Point(20, 30));
-			way.add(new Point(-30, -30));
-			way.add(new Point(20, 30));
-			way.add(new Point(-30, -30));
+			way.add(new Point(-31, -30));
+			way.add(new Point(2, -10));
+			way.add(new Point(23, 30));
+			way.add(new Point(-34, -30));
+			way.add(new Point(25, 30));
+			way.add(new Point(-36, -30));
+			way.add(new Point(27, 30));
+			way.add(new Point(-38, -30));
+			way.add(new Point(29, 30));
 
 			Enemy enemy = null;
 			for (i = 0; i < enemyModels.length; i++) {
