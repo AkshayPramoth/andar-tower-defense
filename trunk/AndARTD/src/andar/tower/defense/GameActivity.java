@@ -31,10 +31,8 @@ import edu.dhbw.andar.exceptions.AndARException;
 public class GameActivity extends AndARActivity implements
 		SurfaceHolder.Callback {
 
-	private Model enemy1;
 	private static final String tag = "GameActivity";
 
-	private Model[] models = null;
 	private ProgressDialog waitDialog;
 	private Resources res;
 	public static final boolean DEBUG = false;
