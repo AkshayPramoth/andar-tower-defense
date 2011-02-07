@@ -247,18 +247,4 @@ public class Model3D extends ARObject implements Serializable {
 		return z;
 	}
 
-	public void getNearestEnemy(ArrayList<Enemy> enemyList) {
-		double distance = 0;
-		for (Enemy enemy : enemyList) {
-			distance = getDistance(enemy);
-		}
-		
-	}
-
-	private double getDistance(Enemy enemy) {
-	double x=(double)(enemy.xpos+getX());
-	double y= (double)(enemy.ypos+getY());
-	double distance =Math.sqrt(x*x+y*y);
-		return distance;
-	}
 }

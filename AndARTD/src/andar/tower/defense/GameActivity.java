@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import andar.tower.defense.model.Enemy;
 import andar.tower.defense.model.Model;
 import andar.tower.defense.model.Model3D;
+import andar.tower.defense.model.Tower;
 import andar.tower.defense.parser.ObjParser;
 import andar.tower.defense.util.AssetsFileUtil;
 import andar.tower.defense.util.BaseFileUtil;
@@ -163,26 +164,25 @@ public class GameActivity extends AndARActivity implements
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			Model model;
 			String centerModel = "energy.obj";
 			// String[] towerModels = { "tower.obj", "towergreen.obj",
 			// "bench.obj", "tank3.obj" };
 			String[] enemyModels = { "Airplane.obj", "tank3.obj" }; // also
-																	// bullets...
+			// bullets...
 			int i = 0;
 
 			// load red circle on centermarker
 			center = new Model();
 			loadModelFromFile(center, centerModel);
 			center.name = "center";
-			gameContext.registerModel(center);
+			// gameContext.registerTower(center);
 			i++;
 
 			String modelName = "Tower.obj";
-			model = new Model();
-			loadModelFromFile(model, modelName);
-			model.name = modelName;
-			gameContext.registerModel(model);
+			Tower tower = new Tower();
+			loadModelFromFile(tower, modelName);
+			tower.name = modelName;
+			gameContext.registerTower(tower);
 
 			// load enemies with pathes to go
 			ArrayList<Point> way = new ArrayList<Point>();
@@ -261,12 +261,14 @@ public class GameActivity extends AndARActivity implements
 
 			// register models on markers
 			try {
+				if (center != null) {
+					artoolkit.registerARObject(center.model3D);
+				}
 				if (gameContext.towerList != null) {
-					for (Model model : gameContext.towerList) {
-						artoolkit.registerARObject(model.model3D);
+					for (Tower tower : gameContext.towerList) {
+						artoolkit.registerARObject(tower.model3D);
 					}
-					// nr 1 is rupee tower - just for testing 
-					gameThread.tower = gameContext.towerList.get(1).model3D;
+
 				}
 				if (gameContext.enemyList != null) {
 					for (Enemy enemy : gameContext.enemyList) {

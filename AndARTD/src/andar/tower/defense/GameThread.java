@@ -1,8 +1,7 @@
 package andar.tower.defense;
 
 import andar.tower.defense.model.Enemy;
-import andar.tower.defense.model.Model3D;
-import android.os.Handler;
+import andar.tower.defense.model.Tower;
 import android.os.Message;
 
 public class GameThread extends Thread {
@@ -14,7 +13,6 @@ public class GameThread extends Thread {
 	// time
 	long prevTime;
 	long currTime;
-	public Model3D tower;
 	private GameActivityHandler gameActivityHandler;
 
 	// game area limits
@@ -54,7 +52,7 @@ public class GameThread extends Thread {
 		boolean collision = false;
 		
 		while (running) {
-			if (tower != null) {
+			if (gameContext.towerList.size() > 0) {
 				currTime = System.nanoTime();
 				td = currTime - prevTime;
 				prevTime = currTime;
@@ -66,9 +64,12 @@ public class GameThread extends Thread {
 					enemy.positionUpdate();
 					yield();
 				}
-				tower.update(td, gameContext.gameCenter);
-				updateHUD(tower.getX(), tower.getY());
-				tower.getNearestEnemy(gameContext.enemyList);
+				// nr 1 is rupee tower - just for testing 
+				Tower tower = gameContext.towerList.get(1);
+				tower.model3D.update(td, gameContext.gameCenter);
+				updateHUD(tower.model3D.getX(), tower.model3D.getY());
+				tower.updateNearestEnemyInRange(gameContext.enemyList);
+				tower.attack();
 				
 				
 				// check for collisions
