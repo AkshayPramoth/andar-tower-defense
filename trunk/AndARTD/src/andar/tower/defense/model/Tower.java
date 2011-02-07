@@ -23,11 +23,12 @@ public class Tower extends Model {
 		nearestEnemyInRange = nearestEnemy;
 
 	}
-
+	public double Quadrat (double x){
+		return x*x;
+	}
 	private double getDistance(Enemy enemy) {
-		double x = (double) (enemy.xpos + model3D.getX());
-		double y = (double) (enemy.ypos + model3D.getY());
-		double distance = Math.sqrt(x * x + y * y);
+
+		double distance = Math.sqrt(Quadrat(enemy.xpos - model3D.getX())+Quadrat(enemy.ypos - model3D.getY()));
 		return distance;
 	}	
 
