@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 import andar.tower.defense.model.Enemy;
 import andar.tower.defense.model.Model;
+import andar.tower.defense.model.Tower;
 
 public class GameContext {
 
 	public ArrayList<Enemy> enemyList;
 
-	public ArrayList<Model> towerList;
+	public ArrayList<Tower> towerList;
 
 	private int health;
 
@@ -27,16 +28,16 @@ public class GameContext {
 		this.health = health;
 		this.score = 0;
 		this.gameCenter = gameCenter;
-		towerList = new ArrayList<Model>();
+		towerList = new ArrayList<Tower>();
 		enemyList = new ArrayList<Enemy>();
 	}
 
-	public void registerModel(Model model) {
-		towerList.add(model);
+	public void registerTower(Tower tower) {
+		towerList.add(tower);
 	}
 
-	public void deregisterModel(Model model) {
-		towerList.remove(model);
+	public void deregisterTower(Tower tower) {
+		towerList.remove(tower);
 	}
 	
 	public void registerEnemy(Enemy model) {
