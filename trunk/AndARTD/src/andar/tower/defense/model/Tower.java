@@ -2,39 +2,49 @@ package andar.tower.defense.model;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 public class Tower extends Model {
 
 	/* Tower can attack Enemies in this radius */
 	private int actionRadius = 20;
 	private Enemy nearestEnemyInRange;
+	private String tag = "Tower";
 
-	public void updateNearestEnemyInRange(ArrayList<Enemy> enemyList) {
-		double distance = 0;
-		double nearestDistance = actionRadius;
+	public int updateNearestEnemyInRange(ArrayList<Enemy> enemyList) {
+		int distance = 0;
+		int nearestDistance = actionRadius;
 		Enemy nearestEnemy = null;
 		for (Enemy enemy : enemyList) {
-			distance = getDistance(enemy);
-			if (distance < nearestDistance) {
-				nearestEnemy = enemy;
-				nearestDistance = distance;
+			if (enemy.model3D.isVisible()) {
+				distance = getDistance(enemy);
+				if (distance < nearestDistance) {
+					nearestEnemy = enemy;
+					nearestDistance = distance;
+				}
 			}
 		}
 
 		nearestEnemyInRange = nearestEnemy;
+		return nearestDistance;
 
 	}
-	public double Quadrat (double x){
-		return x*x;
-	}
-	private double getDistance(Enemy enemy) {
 
-		double distance = Math.sqrt(Quadrat(enemy.xpos - model3D.getX())+Quadrat(enemy.ypos - model3D.getY()));
+	public int quadrat(int x) {
+		return x * x;
+	}
+
+	private int getDistance(Enemy enemy) {
+
+		int distance = (int) Math.sqrt(quadrat((int) (enemy.xpos - model3D.getX()))
+				+ quadrat((int) (enemy.ypos - model3D.getY())));
+		Log.i(tag , "enemx: " + enemy.xpos + " -modlgetX: " +model3D.getX()+ "=x: " + (enemy.xpos - model3D.getX()) + " Distance: " + distance);
 		return distance;
-	}	
+	}
 
 	public void attack() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -14,6 +14,7 @@ public class GameThread extends Thread {
 	long prevTime;
 	long currTime;
 	private GameActivityHandler gameActivityHandler;
+	public boolean loadingDone = false;
 
 	// game area limits
 	public static final float UPPERLIMITX = 200;
@@ -51,8 +52,8 @@ public class GameThread extends Thread {
 		yield();
 		boolean collision = false;
 		
-		while (running) {
-			if (gameContext.towerList.size() > 0) {
+		while (running ) {
+			if (loadingDone ) {
 				currTime = System.nanoTime();
 				td = currTime - prevTime;
 				prevTime = currTime;
@@ -65,10 +66,10 @@ public class GameThread extends Thread {
 					yield();
 				}
 				// nr 1 is rupee tower - just for testing 
-				Tower tower = gameContext.towerList.get(1);
+				Tower tower = gameContext.towerList.get(0);
 				tower.model3D.update(td, gameContext.gameCenter);
-				updateHUD(tower.model3D.getX(), tower.model3D.getY());
-				tower.updateNearestEnemyInRange(gameContext.enemyList);
+				int minDistance = tower.updateNearestEnemyInRange(gameContext.enemyList);
+				updateHUD(tower.model3D.getX(), minDistance);
 				tower.attack();
 				
 				
@@ -113,7 +114,6 @@ public class GameThread extends Thread {
 				// ball.reset();
 				// }
 				// }
-
 			}
 			yield();
 		}

@@ -95,9 +95,8 @@ public class GameActivity extends AndARActivity implements
 			public void handleMessage(Message msg) {
 				if (msg.what == UPDATE_X_Y) {
 					int x = msg.arg1;
-					int y = msg.arg2;
 					hud_x.setText("Tower rel. x: " + x);
-					hud_y.setText("Tower rel. y: " + y);
+					hud_y.setText("Dist En-Tow: " + msg.arg2);
 				} else {
 					Log.i(tag, "Unknown handle with what-code: " + msg.what);
 				}
@@ -212,6 +211,8 @@ public class GameActivity extends AndARActivity implements
 			if (enemy != null)
 				enemy.way = way;
 
+			/* loading finished */
+			gameThread.loadingDone = true;
 			return null;
 
 		}
