@@ -71,10 +71,7 @@ public class Model3D extends ARObject implements Serializable {
 					+ "/" + y + "/" + z);		
 		} else {
 			//is there any touchevent?
-		
-		
 		}
-		//Log.d("Paddle_X", y+"");
 	}
 	
 	@Override
@@ -108,7 +105,6 @@ public class Model3D extends ARObject implements Serializable {
 	@Override
 	public void draw(GL10 gl) {
 		super.draw(gl);
-//		model.positionUpdate();
 
 		// gl = (GL10) GLDebugHelper.wrap(gl,
 		// GLDebugHelper.CONFIG_CHECK_GL_ERROR, log);
@@ -174,10 +170,6 @@ public class Model3D extends ARObject implements Serializable {
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_NORMAL_ARRAY);
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-
-		Model3D centerObject = this.model.center.model3D;
-		
-//		centerObject.calculateDistance(this.getTransMatrix());
 	}
 
 	public synchronized double[] getInvTransMat() {

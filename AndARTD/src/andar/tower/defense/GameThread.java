@@ -1,5 +1,6 @@
 package andar.tower.defense;
 
+import andar.tower.defense.model.Enemy;
 import andar.tower.defense.model.Model3D;
 import android.os.Handler;
 import android.os.Message;
@@ -64,6 +65,10 @@ public class GameThread extends Thread {
 				tower.update(td, gameContext.gameCenter);
 				updateHUD(tower.getX(), tower.getY());
 
+//				for (Enemy enemy : gameContext.enemyList) {
+//					enemy.positionUpdate();
+//					yield();
+//				}
 				
 				
 				// check for collisions
