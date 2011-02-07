@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 
 import andar.tower.defense.model.Model;
 import andar.tower.defense.util.BaseFileUtil;
@@ -47,14 +46,13 @@ public class ObjParser {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public Model parse(String modelName, BufferedReader is) throws IOException, ParseException {
+	public Model parse(Model model, String modelName, BufferedReader is) throws IOException, ParseException {
 		//global vertices/normals
 		ArrayList<float[]> vertices = new ArrayList<float[]>(1000);
 		ArrayList<float[]> normals = new ArrayList<float[]>(1000);
 		ArrayList<float[]> texcoords = new ArrayList<float[]>();
 		
 		
-		Model model = new Model();
 		Group curGroup = new Group();
 		MtlParser mtlParser = new MtlParser(model,fileUtil);
 		SimpleTokenizer spaceTokenizer = new SimpleTokenizer();

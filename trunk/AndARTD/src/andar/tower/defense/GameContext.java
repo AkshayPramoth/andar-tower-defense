@@ -27,6 +27,8 @@ public class GameContext {
 		this.health = health;
 		this.score = 0;
 		this.gameCenter = gameCenter;
+		towerList = new ArrayList<Model>();
+		enemyList = new ArrayList<Enemy>();
 	}
 
 	public void registerModel(Model model) {

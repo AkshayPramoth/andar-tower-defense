@@ -4,16 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import andar.tower.defense.R;
-import andar.tower.defense.R.id;
-import andar.tower.defense.R.layout;
-import andar.tower.defense.R.string;
+import andar.tower.defense.model.Enemy;
 import andar.tower.defense.model.Model;
 import andar.tower.defense.model.Model3D;
 import andar.tower.defense.parser.ObjParser;
 import andar.tower.defense.util.AssetsFileUtil;
 import andar.tower.defense.util.BaseFileUtil;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -21,7 +17,6 @@ import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
-import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,9 +63,9 @@ public class GameActivity extends AndARActivity implements
 		artoolkit = getArtoolkit();
 		// getSurfaceView().setOnTouchListener(new TouchEventHandler());
 		getSurfaceView().getHolder().addCallback(this);
-		
-		GameCenter gameCenter = new GameCenter
-		("center", "marker_fisch16.patt", 137.0, new double[]{0,0});//170
+
+		GameCenter gameCenter = new GameCenter("center", "marker_fisch16.patt",
+				137.0, new double[] { 0, 0 });// 170
 		try {
 			artoolkit.registerARObject(gameCenter);
 		} catch (AndARException e) {
@@ -80,38 +75,38 @@ public class GameActivity extends AndARActivity implements
 		createHUD();
 		gameContext = new GameContext(100, gameCenter);
 		gameThread = new GameThread(handler, gameContext);
-		
+
 	}
 
-	public void createHUD() { 
-	
-		// add layout 
-        LayoutInflater controlInflater = LayoutInflater.from(getBaseContext());
-        View viewControl = controlInflater.inflate(R.layout.hud, null);
-        LayoutParams layoutParamsControl
-            = new LayoutParams(LayoutParams.FILL_PARENT,
-            LayoutParams.FILL_PARENT);
-        this.addContentView(viewControl, layoutParamsControl);
-        
-        //Handler for UI callbacks
-        hud_x = (TextView) findViewById(R.id.tower_x); 
-        hud_y = (TextView) findViewById(R.id.tower_y); 
-        
-        handler = new GameActivityHandler() {
-        	@Override
-        	public void handleMessage(Message msg) {
-        		if (msg.what == UPDATE_X_Y) {
-        			int x=msg.arg1;
-        			int y=msg.arg2;
-        			hud_x.setText("Tower rel. x: " + x);
-        			hud_y.setText("Tower rel. y: " + y);
-        		} else {
-        			Log.i(tag, "Unknown handle with what-code: " + msg.what);
-        		}
-        	}
-        };
-        
+	public void createHUD() {
+
+		// add layout
+		LayoutInflater controlInflater = LayoutInflater.from(getBaseContext());
+		View viewControl = controlInflater.inflate(R.layout.hud, null);
+		LayoutParams layoutParamsControl = new LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		this.addContentView(viewControl, layoutParamsControl);
+
+		// Handler for UI callbacks
+		hud_x = (TextView) findViewById(R.id.tower_x);
+		hud_y = (TextView) findViewById(R.id.tower_y);
+
+		handler = new GameActivityHandler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if (msg.what == UPDATE_X_Y) {
+					int x = msg.arg1;
+					int y = msg.arg2;
+					hud_x.setText("Tower rel. x: " + x);
+					hud_y.setText("Tower rel. y: " + y);
+				} else {
+					Log.i(tag, "Unknown handle with what-code: " + msg.what);
+				}
+			}
+		};
+
 	}
+
 	/**
 	 * Inform the user about exceptions that occurred in background threads.
 	 */
@@ -129,7 +124,7 @@ public class GameActivity extends AndARActivity implements
 		// this is done here, to assure the surface was already created, so that
 		// the preview can be started
 		// after loading the model
-		if (models == null) {
+		if (gameContext.towerList.size() == 0) {
 			waitDialog = ProgressDialog.show(this, "", getResources().getText(
 					R.string.loading), true);
 			waitDialog.show();
@@ -172,27 +167,24 @@ public class GameActivity extends AndARActivity implements
 
 			Model model;
 			String centerModel = "energy.obj";
-//			String[] towerModels = { "tower.obj", "towergreen.obj", "bench.obj", "tank3.obj" };
-			String[] towerModels = { "tank3.obj" };
-			String[] enemyModels = { "Airplane.obj", "Tower.obj" }; // also bullets...
-			models = new Model[1+towerModels.length + enemyModels.length];
+			// String[] towerModels = { "tower.obj", "towergreen.obj",
+			// "bench.obj", "tank3.obj" };
+			String[] enemyModels = { "Airplane.obj", "tank3.obj" }; // also
+																	// bullets...
 			int i = 0;
 
 			// load red circle on centermarker
-			center = loadModelFromFile(centerModel);
-			center.center = center;
+			center = new Model();
+			loadModelFromFile(center, centerModel);
 			center.name = "center";
-			models[i] = center;
+			gameContext.registerModel(center);
 			i++;
-			
 
-			
-			for (i = 0; i < towerModels.length; i++) {
-				model = loadModelFromFile(towerModels[i]);
-				model.center = center;
-				model.name = towerModels[i];
-				models[1+i] = model;
-			}
+			String modelName = "Tower.obj";
+			model = new Model();
+			loadModelFromFile(model, modelName);
+			model.name = modelName;
+			gameContext.registerModel(model);
 
 			// load enemies with pathes to go
 			ArrayList<Point> way = new ArrayList<Point>();
@@ -212,26 +204,25 @@ public class GameActivity extends AndARActivity implements
 			way.add(new Point(-30, -30));
 			way.add(new Point(20, 30));
 			way.add(new Point(-30, -30));
-			
-			model = null;
+
+			Enemy enemy = null;
 			for (i = 0; i < enemyModels.length; i++) {
-				model = loadModelFromFile(enemyModels[i]);
-				model.center = center;
-				model.name = enemyModels[i];
-				models[1+towerModels.length + i] = model;
+				enemy = new Enemy(null, 100, 10);
+				loadModelFromFile(enemy, enemyModels[i]);
+				enemy.name = enemyModels[i];
+				gameContext.registerEnemy(enemy);
 			}
 
-			//only the last one moves
-			if (model != null)
-				model.way = way;
-			
+			// only the last one moves
+			if (enemy != null)
+				enemy.way = way;
+
 			return null;
 
 		}
 
-		private Model loadModelFromFile(String modelFileName) {
+		private Model loadModelFromFile(Model model, String modelFileName) {
 			// read the model file:
-			Model model = null;
 			if (modelFileName.endsWith(".obj")) {
 				try {
 					if (Config.DEBUG)
@@ -240,7 +231,7 @@ public class GameActivity extends AndARActivity implements
 					if (fileUtil != null) {
 						fileReader = fileUtil.getReaderFromName(modelFileName);
 						if (fileReader != null) {
-							model = parser.parse(modelFileName.substring(0,
+							parser.parse(model, modelFileName.substring(0,
 									modelFileName.length() - 4), fileReader);
 							Log.w(tag, "model3d = new Model3D(model, "
 									+ modelName2patternName(modelFileName)
@@ -273,15 +264,19 @@ public class GameActivity extends AndARActivity implements
 			super.onPostExecute(result);
 			waitDialog.dismiss();
 
-			// register model
+			// register models on markers
 			try {
-				if (models != null) {
-					Model3D model3d = null;
-					for (Model model : models) {
+				if (gameContext.towerList != null) {
+					for (Model model : gameContext.towerList) {
 						artoolkit.registerARObject(model.model3D);
-						model3d = model.model3D;
 					}
-					gameThread.tower = model3d;
+					// nr 1 is rupee tower - just for testing 
+					gameThread.tower = gameContext.towerList.get(1).model3D;
+				}
+				if (gameContext.enemyList != null) {
+					for (Enemy enemy : gameContext.enemyList) {
+						artoolkit.registerARObject(enemy.model3D);
+					}
 				}
 			} catch (AndARException e) {
 				Log.d("on PostExecute", "ERROR ");
@@ -289,7 +284,6 @@ public class GameActivity extends AndARActivity implements
 			}
 			Log.d("Starting Preview", "Preview starting  ");
 			startPreview();
-			
 
 		}
 	}
