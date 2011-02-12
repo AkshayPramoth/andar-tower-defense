@@ -152,9 +152,9 @@ public class GameActivity extends AndARActivity implements
 			if (modelName.equals("Tower.obj")) {
 				patternName = "marker_rupee16";
 			} else if (modelName.equals("tank3.obj")) {
-				patternName = "marker_peace16";
+				patternName = "marker_fisch16";
 			} else if (modelName.equals("Airplane.obj")) {
-				patternName = "marker_hand16";
+				patternName = "marker_fisch16";
 			}
 
 			return patternName;
