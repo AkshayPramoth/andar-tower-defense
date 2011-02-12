@@ -7,7 +7,7 @@ import android.util.Log;
 public class Tower extends Model {
 
 	/* Tower can attack Enemies in this radius */
-	private int actionRadius = 20;
+	private int actionRadius = 500;
 	private Enemy nearestEnemyInRange;
 	private String tag = "Tower";
 
