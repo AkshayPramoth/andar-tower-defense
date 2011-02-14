@@ -65,11 +65,16 @@ public class Model3D extends ARObject implements Serializable {
 			double[] coordsInCenterCS = new double[12];
 			ARToolkit.arUtilMatMul(centerMat, transmat, coordsInCenterCS);
 			float halfWidth = 0;
-			x = (float) coordsInCenterCS[3] - halfWidth;
-			y = (float) coordsInCenterCS[7] - halfWidth;
+			/* there is a strange uncertainty this calculation. 
+			 * the following factors try to adjust this but are just tried out
+			 * and the inaccuracy seems to change depending on the viewpoint.
+			 * Try to tower and center so that distance in either x or y direction is 0... 
+			 */
+			x = (float) coordsInCenterCS[3] - 20;
+			y = (float) coordsInCenterCS[7] - 180;
 			z = (float) coordsInCenterCS[11] - halfWidth;
 			Log.i(tag, "coords of " + model.name + " to center x/y/z: " + x
-					+ "/" + y + "/" + z);		
+					+ "/" + y + "/" + z);	
 		} else {
 			//is there any touchevent?
 		}

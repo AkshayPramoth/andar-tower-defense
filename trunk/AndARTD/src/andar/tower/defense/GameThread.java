@@ -60,60 +60,24 @@ public class GameThread extends Thread {
 
 				gameContext.gameCenter.update(td);
 
-				// update all position
+				// update all positions
 				for (Enemy enemy : gameContext.enemyList) {
-					enemy.positionUpdate();
-					yield();
+					enemy.positionUpdate(gameContext);
+					yield(); //necesarry?
 				}
+				for (Enemy bullet : gameContext.bulletList) {
+					bullet.positionUpdate(gameContext);
+					yield(); //necesarry?
+				}
+				
 				// nr 1 is rupee tower - just for testing 
 				Tower tower = gameContext.towerList.get(0);
 				tower.model3D.update(td, gameContext.gameCenter);
 				int minDistance = tower.updateNearestEnemyInRange(gameContext.enemyList);
-				updateHUD(tower.model3D.getX(), minDistance);
 				tower.attack();
 				
-				
-				// check for collisions
-				collision = false;
-				// if(ball.getVx() > 0) {
-				// //Ball heading to paddle1 ... so we don't care about paddle2
-				// if((ball.getOldX()+ball.radius<=GameThread.UPPERLIMITX)&&(ball.getX()+ball.radius>GameThread.UPPERLIMITX))
-				// {
-				// //Kollision mit Paddel 1
-				// if((ball.getY()+ball.radius>
-				// paddle1.getY())&&(ball.getY()-ball.radius<
-				// paddle1.getY()+paddle1.getWidth())) {
-				// ball.bounceX((paddle2.getY()-paddle2.getOldY())/(td/100));
-				// ball.setX(GameThread.UPPERLIMITX-ball.radius);
-				// collision = true;
-				// }
-				// }
-				// } else {
-				// //Ball heading to paddle2 ... so we don't care about paddle1
-				// if((ball.getOldX()-ball.radius>=GameThread.LOWERLIMITX)&&(ball.getX()-ball.radius<GameThread.LOWERLIMITX))
-				// {
-				// //Kollision mit Paddel 2
-				// if((ball.getY()+ball.radius>
-				// paddle2.getY())&&(ball.getY()-ball.radius<
-				// paddle2.getY()+paddle2.getWidth())) {
-				// ball.bounceX((paddle2.getY()-paddle2.getOldY())/(td/100));
-				// ball.setX(GameThread.LOWERLIMITX+ball.radius);
-				// collision = true;
-				// }
-				// }
-				// }
-
-				// if(!collision) {
-				// if(ball.getX()+ball.radius>GameThread.UPPERLIMITX) {
-				// //score
-				// score.incComputerScore();
-				// ball.reset();
-				// } else if (ball.getX()-ball.radius<GameThread.LOWERLIMITX) {
-				// score.incPlayerScore();
-				// //score
-				// ball.reset();
-				// }
-				// }
+				updateHUD(tower.model3D.getX(), minDistance);
+//				updateHUD(tower.model3D.getX(), tower.model3D.getY());
 			}
 			yield();
 		}
