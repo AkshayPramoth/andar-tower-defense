@@ -105,7 +105,7 @@ public class Enemy extends Model {
 //			Log.i(tag , "deltaXY: " + deltaX + " / " + deltaY);
 			double hypo = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 			float scale = (float) (wayToGo / hypo);
-			if (deltaX < 0.1 && deltaY < 0.1) {
+			if (scale > 1) {
 				// next step would exceed actual way point
 				xpos = point.x;
 				ypos = point.y;
