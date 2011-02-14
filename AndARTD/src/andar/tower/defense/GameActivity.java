@@ -153,6 +153,8 @@ public class GameActivity extends AndARActivity implements
 				patternName = "marker_rupee16";
 			} else if (modelName.equals("tank3.obj")) {
 				patternName = "marker_fisch16";
+			} else if (modelName.equals("bullet.obj")) {
+				patternName = "marker_hand16";
 			} else if (modelName.equals("Airplane.obj")) {
 				patternName = "marker_fisch16";
 			}
@@ -166,7 +168,7 @@ public class GameActivity extends AndARActivity implements
 			String centerModel = "energy.obj";
 			// String[] towerModels = { "tower.obj", "towergreen.obj",
 			// "bench.obj", "tank3.obj" };
-			String[] enemyModels = { "Airplane.obj", "tank3.obj" }; // also
+			String[] enemyModels = {"bullet.obj", "Airplane.obj", "tank3.obj" }; // also
 			// bullets...
 			int i = 0;
 
@@ -201,7 +203,7 @@ public class GameActivity extends AndARActivity implements
 
 			Enemy enemy = null;
 			for (i = 0; i < enemyModels.length; i++) {
-				enemy = new Enemy(null, 100, 10);
+				enemy = new Enemy(null, center, 100, 10);
 				loadModelFromFile(enemy, enemyModels[i]);
 				enemy.name = enemyModels[i];
 				gameContext.registerEnemy(enemy);

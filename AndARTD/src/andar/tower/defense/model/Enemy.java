@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import andar.tower.defense.GameContext;
 import android.graphics.Point;
 import android.util.Log;
 
@@ -28,15 +29,20 @@ public class Enemy extends Model {
 
 	private String tag = "Enemy";
 
-	public Enemy(Model energyModel, int health, int velocity) {
+	/* whatever this Moveable is heading for: center, enemy ... */ 
+	private Model target;
+
+	public Enemy(Model energyModel, Model target, int health, int velocity) {
+		super();
 		way = null;
 		this.velocity = velocity;
 		this.health = health;
 		this.maxHealth = this.health;
+		this.target = target;
 //		this.energyModel = energyModel;
 
 //		energyModel.adjustModel(0, 0, 5f);
-		hit(0);
+		hit(0, null);
 
 	}
 
@@ -54,18 +60,21 @@ public class Enemy extends Model {
 	}
 
 	/**
-	 * get hit/shot from tower -> update health
-	 * 
-	 * @param hitpoints
+	 * get hit/shot: a model that aims at this one reaches its destination
+	 * @param hitpoints how hard it got hit
+	 * @param gameContext
 	 */
-	private void hit(int hitpoints) {
+	@Override
+	protected void hit(int hitpoints, GameContext gameContext) {
+		/* get hit/shot from tower -> update health
+		 */
 		health -= hitpoints;
 
 		// adjust model that displays actual healthpoints
 //		energyModel.setScale(((float) health) / maxHealth);
 
 		if (health <= 0) {
-//			gameContext.enemyKilled(this);
+			gameContext.enemyKilled(this);
 		}
 
 	}
@@ -83,7 +92,7 @@ public class Enemy extends Model {
 	/**
 	 * calculate new position on path depending on velocity
 	 */
-	public void positionUpdate() {
+	public void positionUpdate(GameContext gameContext) {
 		double timestamp = System.currentTimeMillis();
 
 		if (way != null && lastPosUpdate != 0) {
@@ -102,7 +111,10 @@ public class Enemy extends Model {
 				ypos = point.y;
 				way.remove(0);
 				if (way.size() == 0) {
+					// reached final target
 					way = null;
+					gameContext.deregisterEnemy(this);
+					target.hit(health, gameContext);
 				}
 				Log.i(tag, "reachedpoint " + this + " to (x/y): " + this.xpos
 						+ " / " + this.ypos);

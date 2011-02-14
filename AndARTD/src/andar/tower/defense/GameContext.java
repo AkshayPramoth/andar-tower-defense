@@ -9,7 +9,7 @@ import andar.tower.defense.model.Tower;
 public class GameContext {
 
 	public ArrayList<Enemy> enemyList;
-
+	public ArrayList<Enemy> bulletList;
 	public ArrayList<Tower> towerList;
 
 	private int health;
@@ -30,12 +30,12 @@ public class GameContext {
 		this.gameCenter = gameCenter;
 		towerList = new ArrayList<Tower>();
 		enemyList = new ArrayList<Enemy>();
+		bulletList = new ArrayList<Enemy>();
 	}
 
 	public void registerTower(Tower tower) {
 		towerList.add(tower);
 	}
-
 	public void deregisterTower(Tower tower) {
 		towerList.remove(tower);
 	}
@@ -43,8 +43,14 @@ public class GameContext {
 	public void registerEnemy(Enemy model) {
 		enemyList.add(model);
 	}
-	
 	public void deregisterEnemy(Enemy model) {
+		enemyList.remove(model);
+	}
+	
+	public void registerBullet(Enemy model) {
+		enemyList.add(model);
+	}
+	public void deregisterBullet(Enemy model) {
 		enemyList.remove(model);
 	}
 
@@ -52,18 +58,14 @@ public class GameContext {
 		return null;
 	}
 
-	public Model getNearestModel(Model model) {
-		return null;
-	}
-
 	private void createEnemy() {
 	}
 
-//	public void enemyKilled(Enemy enemy) {
-//		score += enemy.getScoringPoints();
-//	}
-//
-//	public void enemyReachesDestination(Enemy enemy) {
-//		health -= enemy.getMaxHealth();
-//	}
+	public void enemyKilled(Enemy enemy) {
+		score += enemy.getScoringPoints();
+	}
+
+	public void enemyReachesDestination(int hitpoints) {
+		health -= hitpoints;
+	}
 }

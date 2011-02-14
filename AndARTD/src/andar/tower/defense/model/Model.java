@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import andar.tower.defense.GameContext;
 import andar.tower.defense.parser.Group;
 import andar.tower.defense.parser.Material;
 import andar.tower.defense.util.BaseFileUtil;
@@ -128,6 +129,18 @@ public class Model implements Serializable {
 
 	public void addYpos(float f) {
 		this.ypos += f;
+	}
+	
+	/**
+	 * get hit/shot: a model that aims at this one reaches its destination
+	 * @param hitpoints how hard it got hit
+	 * @param gameContext
+	 */
+	protected void hit(int hitpoints, GameContext gameContext) {
+		/* implementation for center:
+		 * the enemy reaches the center before getting destroyed
+		 */
+		gameContext.enemyReachesDestination(hitpoints);
 	}
 
 	/**
