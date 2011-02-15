@@ -70,7 +70,7 @@ public class GameThread extends Thread {
 				for (Tower tower : gameContext.modelPool.getActiveTowers()) {
 					tower.model3D.update(deltaTime, gameContext.gameCenter);
 					int minDistance = tower.updateNearestEnemyInRange(gameContext.enemyList);
-					tower.attack();
+					tower.attack(gameContext);
 					if (i == 0) {
 						updateHUD(tower.model3D.getX(), minDistance);
 //						updateHUD(tower.model3D.getX(), tower.model3D.getY());

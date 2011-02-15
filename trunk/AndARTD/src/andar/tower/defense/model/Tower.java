@@ -3,6 +3,7 @@ package andar.tower.defense.model;
 import java.util.ArrayList;
 
 import andar.tower.defense.GameContext;
+import android.graphics.Point;
 import android.util.Log;
 
 public class Tower extends Model {
@@ -15,7 +16,8 @@ public class Tower extends Model {
 	private int actionRadius = 500;
 	private Enemy nearestEnemyInRange;
 	private String tag = "Tower";
-
+	public ArrayList<Point> way;
+	private boolean shoot = false;
 	public int updateNearestEnemyInRange(ArrayList<Enemy> enemyList) {
 		int distance = 0;
 		int nearestDistance = actionRadius;
@@ -26,6 +28,7 @@ public class Tower extends Model {
 				if (distance < nearestDistance) {
 					nearestEnemy = enemy;
 					nearestDistance = distance;
+					shoot=true;
 				}
 			}
 		}
@@ -49,9 +52,16 @@ public class Tower extends Model {
 		return distance;
 	}
 
-	public void attack() {
-		// TODO Auto-generated method stub
-
+	public void attack(GameContext gamecontext) {
+		if( shoot == true){
+			
+		Point targetLoction = new Point((int)nearestEnemyInRange.xpos-5,(int) nearestEnemyInRange.ypos-5);
+		Enemy Bullet =gamecontext.modelPool.getBullet(targetLoction);
+		Bullet.xpos=this.xpos+5;
+		Bullet.ypos=this.ypos+5;
+		
+		}
+		
 	}
 	
 
