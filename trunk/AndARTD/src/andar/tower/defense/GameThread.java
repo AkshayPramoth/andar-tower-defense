@@ -41,18 +41,19 @@ public class GameThread extends Thread {
 		setName("GameThread");
 		prevTime = System.nanoTime();
 		long deltaTime;
-		long deltaLongTime = 15 * 1000000000;// nanoseconds
-		long maxDeltaLong =  15 * 1000000000;
+		long deltaLongTime = 15 * 1000;// nanoseconds
+		long maxDeltaLong =  15 * 1000;
 		yield();
 		
 		while (running) {
 			if (loadingDone) {
-				currTime = System.nanoTime();
+				currTime = System.currentTimeMillis();
 				deltaTime = currTime - prevTime;
 				deltaLongTime = currTime - prevLongTime;
 				// update monsters all 15 seconds
 				if (deltaLongTime > maxDeltaLong) {
 					gameContext.createEnemy();
+					prevLongTime = currTime;
 				}
 				
 				prevTime = currTime;
@@ -62,7 +63,7 @@ public class GameThread extends Thread {
 				// update all positions
 				for (Enemy enemy : gameContext.modelPool.getActiveEnemies()) {
 					enemy.positionUpdate(gameContext);
-					yield(); //necesarry?
+					yield(); //necessarry?
 				}
 				for (Enemy bullet : gameContext.modelPool.getActiveBullets()) {
 					bullet.positionUpdate(gameContext);
