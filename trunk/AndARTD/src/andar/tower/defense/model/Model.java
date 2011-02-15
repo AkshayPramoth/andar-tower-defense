@@ -34,6 +34,8 @@ public class Model implements Serializable {
 	public static final int STATE_DYNAMIC = 0;
 	public static final int STATE_FINALIZED = 1;
 	
+	private boolean hidden = false;
+	
 	
 	// timestamp of last position-update in milliseconds
 	private double lastPosUpdate = 0; 
@@ -114,6 +116,14 @@ public class Model implements Serializable {
 
 	public void setParsedObjModel(ParsedObjModel parsedObjModel) {
 		this.parsedObjModel = parsedObjModel;
+	}
+
+	public boolean isHidden() {
+		return hidden;
+	}
+
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
 	}
 
 }

@@ -70,10 +70,7 @@ public class GameCenter extends ARObject {
 	
 	public synchronized void update(long time) {
 		if(isVisible()) {
-//			double[] transmat = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1};
-//			double[] invTrans = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1};
 			double[] transmat = getTransMatrix();
-//			ARToolkit.arUtilMatMul(transmat, transmat, invTrans);
 			ARToolkit.arUtilMatInv(transmat, invTrans);
 			double marker_x = transmat[3];
 			double marker_y = transmat[7];
