@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 
 import andar.tower.defense.model.Model;
+import andar.tower.defense.model.ParsedObjModel;
 import andar.tower.defense.util.BaseFileUtil;
 import andar.tower.defense.util.Util;
 import android.R;
@@ -19,7 +20,7 @@ public class MtlParser {
 
 	private BaseFileUtil fileUtil;
 	
-	public MtlParser(Model model, BaseFileUtil fileUtil) {
+	public MtlParser(ParsedObjModel model, BaseFileUtil fileUtil) {
 		this.fileUtil = fileUtil;
 	}
 
@@ -27,7 +28,7 @@ public class MtlParser {
 	 * parses the given material definition
 	 * @param line
 	 */
-	public void parse(Model model, BufferedReader is) {
+	public void parse(ParsedObjModel parsedObjModel, BufferedReader is) {
 		Material curMat = null;
 		int lineNum = 1;
 		String line;
@@ -42,7 +43,7 @@ public class MtlParser {
 						// specular color
 						String mtlName = line.substring(7);
 						curMat = new Material(mtlName);
-						model.addMaterial(curMat);
+						parsedObjModel.addMaterial(curMat);
 					} else if(curMat == null) {
 						//if the current material is not set, there is no need to parse anything
 					} else if (line.startsWith("# ")) {

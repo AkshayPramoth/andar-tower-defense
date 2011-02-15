@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import andar.tower.defense.model.Enemy;
 import andar.tower.defense.model.Model;
 import andar.tower.defense.model.Model3D;
+import andar.tower.defense.model.ParsedObjModel;
 import andar.tower.defense.model.Tower;
 import andar.tower.defense.parser.ObjParser;
 import andar.tower.defense.util.AssetsFileUtil;
@@ -131,12 +132,22 @@ public class GameActivity extends AndARActivity implements
 	}
 
 	private class ModelLoader extends AsyncTask<Void, Void, Void> {
+		
+		/* time measures in ms:
+		 * ObjParser.parse:       3000-10000 ms
+		 * new Model3D(...)        100 ms
+		 * registerARObject         10 ms
+		 */
 
 		BaseFileUtil fileUtil;
 		BufferedReader fileReader;
 		ObjParser parser;
-		private String tag = "ModelLoader";
+		private String tag = "GameActivity";
 		private Model center;
+		private ParsedObjModel towerObjModel;
+		private ParsedObjModel tankObjModel;
+		private ParsedObjModel bulletObjModel;
+		private ParsedObjModel airplaneObjModel;
 
 		public ModelLoader() {
 			super();
@@ -144,7 +155,8 @@ public class GameActivity extends AndARActivity implements
 			fileUtil.setBaseFolder("models/");
 			parser = new ObjParser(fileUtil);
 		}
-
+		
+		
 		private String modelName2patternName(String modelName) {
 			// the designated map-marker
 			String patternName = "marker_fisch16";
@@ -165,25 +177,24 @@ public class GameActivity extends AndARActivity implements
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			String centerModel = "energy.obj";
-			// String[] towerModels = { "tower.obj", "towergreen.obj",
-			// "bench.obj", "tank3.obj" };
-			String[] enemyModels = {"bullet.obj", "Airplane.obj", "tank3.obj" }; // also
-			// bullets...
+			String centerModelName = "energy.obj";
 			int i = 0;
 
 			// load red circle on centermarker
-			center = new Model();
-			loadModelFromFile(center, centerModel);
+			ParsedObjModel energyObjModel = loadModelFromFile(centerModelName);
+			center = new Model(energyObjModel, modelName2patternName(centerModelName) + ".patt");
 			center.name = "center";
 			// gameContext.registerTower(center);
 			i++;
 
 			String modelName = "Tower.obj";
-			Tower tower = new Tower();
-			loadModelFromFile(tower, modelName);
+			towerObjModel = loadModelFromFile(modelName);
+			Tower tower = new Tower(towerObjModel, modelName2patternName(modelName) + ".patt");
 			tower.name = modelName;
 			gameContext.registerTower(tower);
+			Tower tower2 = new Tower(towerObjModel, "marker_at16.patt");
+			tower2.name = modelName;
+			gameContext.registerTower(tower2);
 
 			// load enemies with pathes to go
 			ArrayList<Point> way = new ArrayList<Point>();
@@ -202,12 +213,20 @@ public class GameActivity extends AndARActivity implements
 			way.add(new Point(29, 30));
 
 			Enemy enemy = null;
-			for (i = 0; i < enemyModels.length; i++) {
-				enemy = new Enemy(null, center, 100, 10);
-				loadModelFromFile(enemy, enemyModels[i]);
-				enemy.name = enemyModels[i];
-				gameContext.registerEnemy(enemy);
-			}
+			String enemyFileName = "bullet.obj";
+			bulletObjModel = loadModelFromFile(enemyFileName);
+			
+			enemyFileName = "Airplane.obj";
+			airplaneObjModel = loadModelFromFile(enemyFileName);
+			enemy = new Enemy(airplaneObjModel, modelName2patternName(enemyFileName) + ".patt", null, center, 100, 10);
+			enemy.name = enemyFileName;
+			gameContext.registerEnemy(enemy);
+			
+			enemyFileName = "tank3.obj";
+			tankObjModel = loadModelFromFile(enemyFileName);
+			enemy = new Enemy(tankObjModel, modelName2patternName(enemyFileName) + ".patt", null, center, 100, 10);
+			enemy.name = enemyFileName;
+			gameContext.registerEnemy(enemy);
 
 			// only the last one moves
 			if (enemy != null)
@@ -219,8 +238,9 @@ public class GameActivity extends AndARActivity implements
 
 		}
 
-		private Model loadModelFromFile(Model model, String modelFileName) {
+		private ParsedObjModel loadModelFromFile(String modelFileName) {
 			// read the model file:
+			ParsedObjModel parsedObjModel = null;
 			if (modelFileName.endsWith(".obj")) {
 				try {
 					if (Config.DEBUG)
@@ -229,15 +249,12 @@ public class GameActivity extends AndARActivity implements
 					if (fileUtil != null) {
 						fileReader = fileUtil.getReaderFromName(modelFileName);
 						if (fileReader != null) {
-							parser.parse(model, modelFileName.substring(0,
+							parsedObjModel =  new ParsedObjModel(modelFileName);
+							parser.parse(parsedObjModel, modelFileName.substring(0,
 									modelFileName.length() - 4), fileReader);
 							Log.w(tag, "model3d = new Model3D(model, "
 									+ modelName2patternName(modelFileName)
 									+ ".patt");
-							Model3D model3d = new Model3D(model,
-									modelName2patternName(modelFileName)
-											+ ".patt");
-							model.model3D = model3d;
 						} else {
 							Log.w("ModelLoader", "no file reader: "
 									+ modelFileName);
@@ -254,7 +271,7 @@ public class GameActivity extends AndARActivity implements
 					e.printStackTrace();
 				}
 			}
-			return model;
+			return parsedObjModel;
 		}
 
 		@Override
