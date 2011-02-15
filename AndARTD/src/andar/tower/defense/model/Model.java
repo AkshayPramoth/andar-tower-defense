@@ -45,8 +45,10 @@ public class Model implements Serializable {
 	 * all materials
 	 */
 	protected HashMap<String, Material> materials = new HashMap<String, Material>();
+	protected GameContext gameContext;
 
-	public Model(ParsedObjModel parsedObjModel, String patternName) {
+	public Model(GameContext gameContext, ParsedObjModel parsedObjModel, String patternName) {
+		this.gameContext = gameContext;
 		this.name = parsedObjModel.name;
 		setParsedObjModel(parsedObjModel);
 		Model3D model3d = new Model3D(this, parsedObjModel, patternName);
