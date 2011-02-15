@@ -23,15 +23,17 @@ public class GameThread extends Thread {
 	public static final float UPPERLIMITY = 150;
 	public static final float LOWERLIMITY = -150;
 
-	public GameThread(GameActivityHandler gameActivityHandler, GameContext gameContext) {
+	public GameThread(GameActivityHandler gameActivityHandler,
+			GameContext gameContext) {
 		this.gameActivityHandler = gameActivityHandler;
 		this.gameContext = gameContext;
 		setDaemon(true);
 		start();
 	}
-	
+
 	public void updateHUD(float x, float y) {
-		Message msg = Message.obtain(gameActivityHandler, gameActivityHandler.UPDATE_X_Y, (int)x, (int)y);
+		Message msg = Message.obtain(gameActivityHandler,
+				gameActivityHandler.UPDATE_X_Y, (int) x, (int) y);
 		msg.sendToTarget();
 	}
 
@@ -39,12 +41,12 @@ public class GameThread extends Thread {
 	public synchronized void run() {
 		super.run();
 		setName("GameThread");
-		prevTime = System.nanoTime();
+		prevTime = System.currentTimeMillis();
 		long deltaTime;
 		long deltaLongTime = 15 * 1000;// nanoseconds
-		long maxDeltaLong =  15 * 1000;
+		long maxDeltaLong = 15 * 1000;
 		yield();
-		
+
 		while (running) {
 			if (loadingDone) {
 				currTime = System.currentTimeMillis();
@@ -55,34 +57,40 @@ public class GameThread extends Thread {
 					gameContext.createEnemy();
 					prevLongTime = currTime;
 				}
-				
+
 				prevTime = currTime;
 
 				gameContext.gameCenter.update(deltaTime);
 
 				// update all positions
-				for (Enemy enemy : gameContext.modelPool.getActiveEnemies()) {
-					enemy.positionUpdate(gameContext);
-					yield(); //necessarry?
+				synchronized (gameContext.modelPool) {
+					for (Enemy enemy : gameContext.modelPool.getActiveEnemies()) {
+						enemy.positionUpdate(gameContext);
+					}
 				}
-				for (Enemy bullet : gameContext.modelPool.getActiveBullets()) {
-					bullet.positionUpdate(gameContext);
-					yield(); //necesarry?
+				synchronized (gameContext.modelPool) {
+					for (Enemy bullet : gameContext.modelPool
+							.getActiveBullets()) {
+						bullet.positionUpdate(gameContext);
+					}
 				}
-				
-				// update positioning of towers 
+
+				// update positioning of towers
 				int i = 0;
 				for (Tower tower : gameContext.modelPool.getActiveTowers()) {
 					tower.model3D.update(deltaTime, gameContext.gameCenter);
-					int minDistance = tower.updateNearestEnemyInRange(gameContext.modelPool.getActiveEnemies());
+					int minDistance = tower
+							.updateNearestEnemyInRange(gameContext.modelPool
+									.getActiveEnemies());
 					tower.attack();
 					if (i == 0) {
 						updateHUD(tower.model3D.getX(), minDistance);
-//						updateHUD(tower.model3D.getX(), tower.model3D.getY());
+						// updateHUD(tower.model3D.getX(),
+						// tower.model3D.getY());
 					}
 					i++;
 				}
-				
+
 			}
 			yield();
 		}

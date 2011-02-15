@@ -66,7 +66,7 @@ public class ModelPool {
 
 	}
 
-	private Enemy getEnemy(int type, int health, int velocity) {
+	private synchronized Enemy getEnemy(int type, int health, int velocity) {
 		ArrayList<Enemy> activeList = null;
 		ArrayList<Enemy> inactiveList = null;
 		ParsedObjModel parsedObjModel = null;
@@ -107,7 +107,7 @@ public class ModelPool {
 		return enemy;
 	}
 
-	public void dismissEnemy(int type, Enemy enemy) {
+	public synchronized void dismissEnemy(int type, Enemy enemy) {
 		enemy.setHidden(true);
 		ArrayList<Enemy> activeList = null;
 		ArrayList<Enemy> inactiveList = null;
@@ -135,7 +135,12 @@ public class ModelPool {
 	
 	public Enemy getAirplane() { 
 		Enemy enemy = getEnemy(Enemy.AIRPLANE, 20, 10);
-		enemy.way = randomWay();
+		Point startPoint = randomWayPoint(30);
+		enemy.xpos = startPoint.x;
+		enemy.ypos = startPoint.y;
+		ArrayList<Point> way = new ArrayList<Point>();
+		way.add(new Point(0,0));
+		enemy.way = way;
 		return enemy;
 	}
 	public void dismissAirplane(Enemy enemy) {
@@ -144,7 +149,12 @@ public class ModelPool {
 	
 	public Enemy getTank() { 
 		Enemy enemy = getEnemy(Enemy.TANK, 100, 4);
-		enemy.way = randomWay();
+		Point startPoint = randomWayPoint(30);
+		enemy.xpos = startPoint.x;
+		enemy.ypos = startPoint.y;
+		ArrayList<Point> way = new ArrayList<Point>();
+		way.add(new Point(0,0));
+		enemy.way = way;
 		return enemy;
 	}
 	public void dismissTank(Enemy enemy) {
@@ -174,21 +184,19 @@ public class ModelPool {
 		return tower;
 	}
 	
-	private ArrayList<Point> randomWay() {
+	private Point randomWayPoint(int distanceFromCenter) {
 		/* In normal view distance you can see a model on screen in a range
 		 * of: model.xpos/model.ypos: (-30..+30)/(-30..+30)
 		 */
-		ArrayList<Point> way = new ArrayList<Point>();
 		
 		// enemies head to center starting on a distance of 15
-		int radius = 15;
+		int radius = distanceFromCenter;
 		double maxX = Math.sqrt((radius*radius)/2);
 		double deltaX = Math.signum(Math.random()-0.5) * Math.random() * maxX;
 		double deltaY = Math.signum(Math.random()-0.5) * Math.sqrt(radius*radius - deltaX*deltaX);
 		
-		way.add(new Point((int)deltaX, (int)deltaY));
+		return new Point((int)deltaX, (int)deltaY);
 		
-		return way;
 	}
 	
 	private ParsedObjModel loadModelFromFile(String modelFileName) {

@@ -136,6 +136,7 @@ public class Enemy extends Model {
 	}
 
 	private void dismiss() {
+		lastPosUpdate = 0;
 		gameContext.modelPool.dismissEnemy(type, this);
 	}
 
