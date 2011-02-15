@@ -15,6 +15,7 @@ public class Model implements Serializable {
 	private static final String tag = "Model";
 	public String name;
 	
+	private ParsedObjModel parsedObjModel; // the meshes and textures
 	public Model3D model3D;
 	public float xrot = 90;
 	public float yrot = 0;
@@ -30,7 +31,6 @@ public class Model implements Serializable {
 	private float defaultScale;
 	public float scale = 4f;
 	
-	public int STATE = STATE_DYNAMIC;
 	public static final int STATE_DYNAMIC = 0;
 	public static final int STATE_FINALIZED = 1;
 	
@@ -44,47 +44,12 @@ public class Model implements Serializable {
 	 */
 	protected HashMap<String, Material> materials = new HashMap<String, Material>();
 
-	public Model() {
-		// add default material
-		materials.put("default", new Material("default"));
+	public Model(ParsedObjModel parsedObjModel, String patternName) {
+		this.name = parsedObjModel.name;
+		setParsedObjModel(parsedObjModel);
+		Model3D model3d = new Model3D(this, parsedObjModel, patternName);
+		this.model3D = model3d;
 		adjustModel(0f,0f,0f);
-	}
-	
-//	/**
-//	 * for movable objects:
-//	 * overwrite to calculate new position depending on path and velocity
-//	 */
-//	public void positionUpdate() {};
-
-	public void addMaterial(Material mat) {
-		// mat.finalize();
-		materials.put(mat.getName(), mat);
-	}
-
-	public Material getMaterial(String name) {
-		return materials.get(name);
-	}
-
-	public void addGroup(Group grp) {
-		if (STATE == STATE_FINALIZED)
-			grp.finalize();
-		groups.add(grp);
-	}
-
-	public Vector<Group> getGroups() {
-		return groups;
-	}
-
-	public void setFileUtil(BaseFileUtil fileUtil) {
-		for (Iterator iterator = materials.values().iterator(); iterator
-				.hasNext();) {
-			Material mat = (Material) iterator.next();
-			mat.setFileUtil(fileUtil);
-		}
-	}
-
-	public HashMap<String, Material> getMaterials() {
-		return materials;
 	}
 	
 	/**
@@ -143,34 +108,12 @@ public class Model implements Serializable {
 		gameContext.enemyReachesDestination(hitpoints);
 	}
 
-	/**
-	 * convert all dynamic arrays to final non alterable ones.
-	 */
-	public void finalize() {
-		if (STATE != STATE_FINALIZED) {
-			STATE = STATE_FINALIZED;
-			for (Iterator iterator = groups.iterator(); iterator.hasNext();) {
-				Group grp = (Group) iterator.next();
-				grp.finalize();
-				grp.setMaterial(materials.get(grp.getMaterialName()));
-			}
-			for (Iterator<Material> iterator = materials.values().iterator(); iterator
-					.hasNext();) {
-				Material mtl = iterator.next();
-				mtl.finalize();
-			}
-		}
+	public ParsedObjModel getParsedObjModel() {
+		return parsedObjModel;
 	}
 
-	/*
-	 * get a google protocol buffers builder, that may be serialized
-	 */
-	/*
-	 * public BufferModel getProtocolBuffer() {
-	 * ModelProtocolBuffer.BufferModel.Builder builder =
-	 * ModelProtocolBuffer.BufferModel.newBuilder();
-	 * 
-	 * return builder.build(); }
-	 */
+	public void setParsedObjModel(ParsedObjModel parsedObjModel) {
+		this.parsedObjModel = parsedObjModel;
+	}
 
 }

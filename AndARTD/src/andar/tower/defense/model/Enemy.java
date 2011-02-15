@@ -32,8 +32,8 @@ public class Enemy extends Model {
 	/* whatever this Moveable is heading for: center, enemy ... */ 
 	private Model target;
 
-	public Enemy(Model energyModel, Model target, int health, int velocity) {
-		super();
+	public Enemy(ParsedObjModel parsedObjModel, String patternName, Model energyModel, Model target, int health, int velocity) {
+		super(parsedObjModel, patternName);
 		way = null;
 		this.velocity = velocity;
 		this.health = health;

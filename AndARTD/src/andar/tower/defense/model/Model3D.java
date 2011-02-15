@@ -26,7 +26,8 @@ import edu.dhbw.andar.ARToolkit;
  */
 public class Model3D extends ARObject implements Serializable {
 
-	private Model model;
+	private ParsedObjModel parsedObjModel; // the meshes and textures
+	private Model model; // information the dynamic model
 	private double[] invTrans = new double[12];
 	private Group[] texturedGroups;
 	private Group[] nonTexturedGroups;
@@ -35,12 +36,13 @@ public class Model3D extends ARObject implements Serializable {
 	private float y = 0;
 	private float z = 0;
 
-	public Model3D(Model model, String patternName) {
+	public Model3D(Model model, ParsedObjModel parsedObjModel, String patternName) {
 		super("model", patternName, 80.0, new double[] { 0, 0 });
+		this.parsedObjModel = parsedObjModel;
 		this.model = model;
-		model.finalize();
+		parsedObjModel.finalize();
 		// separate texture from non textured groups for performance reasons
-		Vector<Group> groups = model.getGroups();
+		Vector<Group> groups = parsedObjModel.getGroups();
 		Vector<Group> texturedGroups = new Vector<Group>();
 		Vector<Group> nonTexturedGroups = new Vector<Group>();
 		for (Iterator<Group> iterator = groups.iterator(); iterator.hasNext();) {
@@ -84,7 +86,7 @@ public class Model3D extends ARObject implements Serializable {
 	public void init(GL10 gl) {
 		int[] tmpTextureID = new int[1];
 		// load textures of every material(that has a texture):
-		Iterator<Material> materialI = model.getMaterials().values().iterator();
+		Iterator<Material> materialI = parsedObjModel.getMaterials().values().iterator();
 		while (materialI.hasNext()) {
 			Material material = (Material) materialI.next();
 			if (material.hasTexture()) {
@@ -250,6 +252,10 @@ public class Model3D extends ARObject implements Serializable {
 
 	public double getZ() {
 		return z;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
 	}
 
 }

@@ -7,6 +7,10 @@ import android.util.Log;
 
 public class Tower extends Model {
 
+	public Tower(ParsedObjModel parsedObjModel, String patternName) {
+		super(parsedObjModel, patternName);
+	}
+
 	/* Tower can attack Enemies in this radius */
 	private int actionRadius = 500;
 	private Enemy nearestEnemyInRange;

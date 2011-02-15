@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import andar.tower.defense.model.Model;
+import andar.tower.defense.model.ParsedObjModel;
 import andar.tower.defense.util.BaseFileUtil;
 import andar.tower.defense.util.Util;
 
@@ -46,7 +47,7 @@ public class ObjParser {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public Model parse(Model model, String modelName, BufferedReader is) throws IOException, ParseException {
+	public ParsedObjModel parse(ParsedObjModel parseObjModel, String modelName, BufferedReader is) throws IOException, ParseException {
 		//global vertices/normals
 		ArrayList<float[]> vertices = new ArrayList<float[]>(1000);
 		ArrayList<float[]> normals = new ArrayList<float[]>(1000);
@@ -54,7 +55,7 @@ public class ObjParser {
 		
 		
 		Group curGroup = new Group();
-		MtlParser mtlParser = new MtlParser(model,fileUtil);
+		MtlParser mtlParser = new MtlParser(parseObjModel,fileUtil);
 		SimpleTokenizer spaceTokenizer = new SimpleTokenizer();
 		SimpleTokenizer slashTokenizer = new SimpleTokenizer();
 		slashTokenizer.setDelimiter("/");
@@ -186,12 +187,12 @@ public class ObjParser {
 					for (int i = 0; i < files.length; i++) {
 						BufferedReader mtlFile = fileUtil.getReaderFromName(files[i]);
 						if(mtlFile != null)
-							mtlParser.parse(model, mtlFile);
+							mtlParser.parse(parseObjModel, mtlFile);
 					}					
 				} else if(line.startsWith("usemtl ")) {
 					//material changed -> new group
 					if(curGroup.groupVertices.size()>0) {
-						model.addGroup(curGroup);
+						parseObjModel.addGroup(curGroup);
 						curGroup = new Group();
 					}
 					//the rest of the line contains the name of the new material
@@ -199,7 +200,7 @@ public class ObjParser {
 				} else if(line.startsWith("g ")) {
 					//new group definition
 					if(curGroup.groupVertices.size()>0) {
-						model.addGroup(curGroup);
+						parseObjModel.addGroup(curGroup);
 						curGroup = new Group();
 						//group name will be ignored so far...is there any use?
 					}
@@ -207,13 +208,13 @@ public class ObjParser {
 			}
 		}
 		if(curGroup.groupVertices.size()>0) {
-			model.addGroup(curGroup);
+			parseObjModel.addGroup(curGroup);
 		}
-		Iterator<Group> groupIt = model.getGroups().iterator();
+		Iterator<Group> groupIt = parseObjModel.getGroups().iterator();
 		while (groupIt.hasNext()) {
 			Group group = (Group) groupIt.next();
-			group.setMaterial(model.getMaterial(group.getMaterialName()));
+			group.setMaterial(parseObjModel.getMaterial(group.getMaterialName()));
 		}
-		return model;
+		return parseObjModel;
 	}
 }
