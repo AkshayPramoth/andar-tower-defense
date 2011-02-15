@@ -124,7 +124,7 @@ public class GameActivity extends AndARActivity implements
 		// this is done here, to assure the surface was already created, so that
 		// the preview can be started
 		// after loading the model
-		if (gameContext.towerList.size() == 0) {
+		if (gameContext.modelPool.getActiveTowers().size() == 0) {
 			waitDialog = ProgressDialog.show(this, "", getResources().getText(
 					R.string.loading), true);
 			waitDialog.show();
@@ -155,11 +155,7 @@ public class GameActivity extends AndARActivity implements
 			gameContext.modelPool = new ModelPool(gameContext, artoolkit, fileUtil);
 
 			Tower tower = gameContext.modelPool.getTower("marker_rupee16.patt");
-			Tower tower2 = gameContext.modelPool.getTower("marker_at16.patt");
-
-			// load enemies with pathes to go
-	
-
+			Tower tower2 = gameContext.modelPool.getTower("marker_at32.patt");
 
 			/* loading finished */
 			gameThread.loadingDone = true;

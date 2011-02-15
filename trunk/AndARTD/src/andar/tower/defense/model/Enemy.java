@@ -24,6 +24,10 @@ public class Enemy extends Model {
 
 	// indicating the actual life energy as additional 3D-model
 	private final Model energyModel = null;
+	public static final int AIRPLANE = 0;
+	public static final int TANK = 1;
+	public static final int BULLET = 2;
+	private int type;
 
 	private int health, maxHealth;
 
@@ -32,9 +36,10 @@ public class Enemy extends Model {
 	/* whatever this Moveable is heading for: center, enemy ... */ 
 	private Model target;
 
-	public Enemy(ParsedObjModel parsedObjModel, String patternName, Model energyModel, Model target, int health, int velocity) {
-		super(parsedObjModel, patternName);
+	public Enemy(GameContext gameContext, int type, ParsedObjModel parsedObjModel, String patternName, Model energyModel, Model target, int health, int velocity) {
+		super(gameContext, parsedObjModel, patternName);
 		way = null;
+		this.type = type;
 		this.velocity = velocity;
 		this.health = health;
 		this.maxHealth = this.health;
@@ -113,8 +118,8 @@ public class Enemy extends Model {
 				if (way.size() == 0) {
 					// reached final target
 					way = null;
-					gameContext.deregisterEnemy(this);
 					target.hit(health, gameContext);
+					dismiss();
 				}
 				Log.i(tag, "reachedpoint " + this + " to (x/y): " + this.xpos
 						+ " / " + this.ypos);
@@ -128,6 +133,10 @@ public class Enemy extends Model {
 
 		lastPosUpdate = timestamp;
 
+	}
+
+	private void dismiss() {
+		gameContext.modelPool.dismissEnemy(type, this);
 	}
 
 }

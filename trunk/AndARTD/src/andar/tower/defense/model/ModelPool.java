@@ -27,25 +27,22 @@ public class ModelPool {
 
 	private GameContext gameContext;
 
-	ArrayList<Enemy> activeAirplanes = new ArrayList<Enemy>();
-	ArrayList<Enemy> inactiveAirplanes = new ArrayList<Enemy>();
+	private ArrayList<Enemy> activeAirplanes = new ArrayList<Enemy>();
+	private ArrayList<Enemy> inactiveAirplanes = new ArrayList<Enemy>();
 
-	ArrayList<Enemy> activeTanks = new ArrayList<Enemy>();
-	ArrayList<Enemy> inactiveTanks = new ArrayList<Enemy>();
+	private ArrayList<Enemy> activeTanks = new ArrayList<Enemy>();
+	private ArrayList<Enemy> inactiveTanks = new ArrayList<Enemy>();
 
-	ArrayList<Enemy> activeBullets = new ArrayList<Enemy>();
-	ArrayList<Enemy> inactiveBullets = new ArrayList<Enemy>();
+	private ArrayList<Enemy> activeBullets = new ArrayList<Enemy>();
+	private ArrayList<Enemy> inactiveBullets = new ArrayList<Enemy>();
 
-	ArrayList<Tower> activeTowers = new ArrayList<Tower>();
+	private ArrayList<Tower> activeTowers = new ArrayList<Tower>();
 	
 	private BaseFileUtil fileUtil;
 
 	private ObjParser parser;
 
 	public static final String CENTER_PATTERN = "marker_fisch16.patt";
-	public static final int AIRPLANE = 0;
-	public static final int TANK = 1;
-	public static final int BULLET = 2;
 
 	private final ParsedObjModel AIRPLANE_OBJMODEL, TANK_OBJMODEL,
 			BULLET_OBJMODEL, TOWER_OBJMODEL;
@@ -74,17 +71,17 @@ public class ModelPool {
 		ArrayList<Enemy> inactiveList = null;
 		ParsedObjModel parsedObjModel = null;
 		switch (type) {
-		case AIRPLANE:
+		case Enemy.AIRPLANE:
 			activeList = activeAirplanes;
 			inactiveList = inactiveAirplanes;
 			parsedObjModel = AIRPLANE_OBJMODEL;
 			break;
-		case TANK:
+		case Enemy.TANK:
 			activeList = activeTanks;
 			inactiveList = inactiveTanks;
 			parsedObjModel = TANK_OBJMODEL;
 			break;
-		case BULLET:
+		case Enemy.BULLET:
 			activeList = activeBullets;
 			inactiveList = inactiveBullets;
 			parsedObjModel = BULLET_OBJMODEL;
@@ -94,7 +91,7 @@ public class ModelPool {
 		}
 		Enemy enemy;
 		if (inactiveList.size() == 0) {
-			enemy = new Enemy(parsedObjModel, CENTER_PATTERN, null, center,
+			enemy = new Enemy(gameContext, type, parsedObjModel, CENTER_PATTERN, null, center,
 					health, velocity);
 			try {
 				artoolkit.registerARObject(enemy.model3D);
@@ -110,20 +107,20 @@ public class ModelPool {
 		return enemy;
 	}
 
-	private void dismissEnemy(int type, Enemy enemy) {
+	public void dismissEnemy(int type, Enemy enemy) {
 		enemy.setHidden(true);
 		ArrayList<Enemy> activeList = null;
 		ArrayList<Enemy> inactiveList = null;
 		switch (type) {
-		case AIRPLANE:
+		case Enemy.AIRPLANE:
 			activeList = activeAirplanes;
 			inactiveList = inactiveAirplanes;
 			break;
-		case TANK:
+		case Enemy.TANK:
 			activeList = activeTanks;
 			inactiveList = inactiveTanks;
 			break;
-		case BULLET:
+		case Enemy.BULLET:
 			activeList = activeBullets;
 			inactiveList = inactiveBullets;
 			break;
@@ -137,36 +134,36 @@ public class ModelPool {
 	}
 	
 	public Enemy getAirplane() { 
-		Enemy enemy = getEnemy(AIRPLANE, 20, 10);
+		Enemy enemy = getEnemy(Enemy.AIRPLANE, 20, 10);
 		enemy.way = randomWay();
 		return enemy;
 	}
 	public void dismissAirplane(Enemy enemy) {
-		dismissEnemy(AIRPLANE, enemy);
+		dismissEnemy(Enemy.AIRPLANE, enemy);
 	}
 	
 	public Enemy getTank() { 
-		Enemy enemy = getEnemy(TANK, 100, 4);
+		Enemy enemy = getEnemy(Enemy.TANK, 100, 4);
 		enemy.way = randomWay();
 		return enemy;
 	}
 	public void dismissTank(Enemy enemy) {
-		dismissEnemy(TANK, enemy);
+		dismissEnemy(Enemy.TANK, enemy);
 	}
 	
 	public Enemy getBullet(Point targetLocation) { 
-		Enemy enemy = getEnemy(BULLET, 10, 20);
+		Enemy enemy = getEnemy(Enemy.BULLET, 10, 20);
 		ArrayList<Point> way = new ArrayList<Point>();
 		way.add(targetLocation);
 		enemy.way = way;
 		return enemy;
 	}
 	public void dismissBullet(Enemy enemy) {
-		dismissEnemy(BULLET, enemy);
+		dismissEnemy(Enemy.BULLET, enemy);
 	}
 	
 	public Tower getTower(String markerName) {
-		Tower tower = new Tower(TOWER_OBJMODEL, markerName);
+		Tower tower = new Tower(gameContext, TOWER_OBJMODEL, markerName);
 		activeTowers.add(tower);
 		try {
 			artoolkit.registerARObject(tower.model3D);
@@ -236,7 +233,7 @@ public class ModelPool {
 		// load red circle on centermarker
 		String centerModelName = "energy.obj";
 		ParsedObjModel energyObjModel = loadModelFromFile(centerModelName);
-		Model model = new Model(energyObjModel, ModelPool.CENTER_PATTERN);
+		Model model = new Model(gameContext, energyObjModel, ModelPool.CENTER_PATTERN);
 		model.name = "center";
 		try {
 			artoolkit.registerARObject(model.model3D);
@@ -252,8 +249,11 @@ public class ModelPool {
 		ArrayList<Enemy> allActiveEnemies = new ArrayList<Enemy>();
 		allActiveEnemies.addAll(activeAirplanes);
 		allActiveEnemies.addAll(activeTanks);
-		allActiveEnemies.addAll(activeBullets);
 		return allActiveEnemies;
+	}
+	
+	public ArrayList<Enemy> getActiveBullets() {
+		return activeBullets;
 	}
 
 	public ArrayList<Tower> getActiveTowers() {
