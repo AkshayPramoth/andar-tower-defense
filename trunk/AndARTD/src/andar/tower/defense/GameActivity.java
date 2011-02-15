@@ -124,7 +124,9 @@ public class GameActivity extends AndARActivity implements
 		// this is done here, to assure the surface was already created, so that
 		// the preview can be started
 		// after loading the model
-		if (gameContext.modelPool.getActiveTowers().size() == 0) {
+		
+//		if (gameContext.modelPool.getActiveTowers().size() == 0) {
+		if (!gameThread.loadingDone) {
 			waitDialog = ProgressDialog.show(this, "", getResources().getText(
 					R.string.loading), true);
 			waitDialog.show();
