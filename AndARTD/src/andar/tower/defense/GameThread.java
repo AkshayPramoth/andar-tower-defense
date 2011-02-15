@@ -48,36 +48,36 @@ public class GameThread extends Thread {
 		super.run();
 		setName("GameThread");
 		prevTime = System.nanoTime();
-		long td;
+		long deltaTime;
 		yield();
-		boolean collision = false;
 		
 		while (running ) {
 			if (loadingDone ) {
 				currTime = System.nanoTime();
-				td = currTime - prevTime;
+				deltaTime = currTime - prevTime;
 				prevTime = currTime;
 
-				gameContext.gameCenter.update(td);
+				gameContext.gameCenter.update(deltaTime);
 
 				// update all positions
-				for (Enemy enemy : gameContext.enemyList) {
+				for (Enemy enemy : gameContext.modelPool.getActiveEnemies()) {
 					enemy.positionUpdate(gameContext);
 					yield(); //necesarry?
 				}
-				for (Enemy bullet : gameContext.bulletList) {
-					bullet.positionUpdate(gameContext);
-					yield(); //necesarry?
+				
+				// update positioning of towers 
+				int i = 0;
+				for (Tower tower : gameContext.modelPool.getActiveTowers()) {
+					tower.model3D.update(deltaTime, gameContext.gameCenter);
+					int minDistance = tower.updateNearestEnemyInRange(gameContext.enemyList);
+					tower.attack();
+					if (i == 0) {
+						updateHUD(tower.model3D.getX(), minDistance);
+//						updateHUD(tower.model3D.getX(), tower.model3D.getY());
+					}
+					i++;
 				}
 				
-				// nr 1 is rupee tower - just for testing 
-				Tower tower = gameContext.towerList.get(0);
-				tower.model3D.update(td, gameContext.gameCenter);
-				int minDistance = tower.updateNearestEnemyInRange(gameContext.enemyList);
-				tower.attack();
-				
-				updateHUD(tower.model3D.getX(), minDistance);
-//				updateHUD(tower.model3D.getX(), tower.model3D.getY());
 			}
 			yield();
 		}

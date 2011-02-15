@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import andar.tower.defense.model.Enemy;
 import andar.tower.defense.model.Model;
+import andar.tower.defense.model.ModelPool;
 import andar.tower.defense.model.Tower;
 
 public class GameContext {
@@ -17,8 +18,8 @@ public class GameContext {
 	private long score;
 
 	public GameCenter gameCenter;
+	public ModelPool modelPool;
 
-//	public Map myMap;
 //	public PersistentGameData myPersistentGameData;
 //	public Game myGame;
 //	public Map myMap;

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import andar.tower.defense.model.Enemy;
+import andar.tower.defense.model.ModelPool;
 import andar.tower.defense.model.Model;
 import andar.tower.defense.model.Model3D;
 import andar.tower.defense.model.ParsedObjModel;
@@ -64,7 +65,7 @@ public class GameActivity extends AndARActivity implements
 		// getSurfaceView().setOnTouchListener(new TouchEventHandler());
 		getSurfaceView().getHolder().addCallback(this);
 
-		GameCenter gameCenter = new GameCenter("center", "marker_fisch16.patt",
+		GameCenter gameCenter = new GameCenter("center", ModelPool.CENTER_PATTERN,
 				137.0, new double[] { 0, 0 });// 170
 		try {
 			artoolkit.registerARObject(gameCenter);
@@ -140,97 +141,25 @@ public class GameActivity extends AndARActivity implements
 		 */
 
 		BaseFileUtil fileUtil;
-		BufferedReader fileReader;
-		ObjParser parser;
 		private String tag = "GameActivity";
-		private Model center;
-		private ParsedObjModel towerObjModel;
-		private ParsedObjModel tankObjModel;
-		private ParsedObjModel bulletObjModel;
-		private ParsedObjModel airplaneObjModel;
 
 		public ModelLoader() {
 			super();
 			fileUtil = new AssetsFileUtil(getResources().getAssets());
 			fileUtil.setBaseFolder("models/");
-			parser = new ObjParser(fileUtil);
-		}
-		
-		
-		private String modelName2patternName(String modelName) {
-			// the designated map-marker
-			String patternName = "marker_fisch16";
-
-			if (modelName.equals("Tower.obj")) {
-				patternName = "marker_rupee16";
-			} else if (modelName.equals("tank3.obj")) {
-				patternName = "marker_fisch16";
-			} else if (modelName.equals("bullet.obj")) {
-				patternName = "marker_hand16";
-			} else if (modelName.equals("Airplane.obj")) {
-				patternName = "marker_fisch16";
-			}
-
-			return patternName;
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			String centerModelName = "energy.obj";
-			int i = 0;
+			gameContext.modelPool = new ModelPool(gameContext, artoolkit, fileUtil);
 
-			// load red circle on centermarker
-			ParsedObjModel energyObjModel = loadModelFromFile(centerModelName);
-			center = new Model(energyObjModel, modelName2patternName(centerModelName) + ".patt");
-			center.name = "center";
-			// gameContext.registerTower(center);
-			i++;
-
-			String modelName = "Tower.obj";
-			towerObjModel = loadModelFromFile(modelName);
-			Tower tower = new Tower(towerObjModel, modelName2patternName(modelName) + ".patt");
-			tower.name = modelName;
-			gameContext.registerTower(tower);
-			Tower tower2 = new Tower(towerObjModel, "marker_at16.patt");
-			tower2.name = modelName;
-			gameContext.registerTower(tower2);
+			Tower tower = gameContext.modelPool.getTower("marker_rupee16.patt");
+			Tower tower2 = gameContext.modelPool.getTower("marker_at16.patt");
 
 			// load enemies with pathes to go
-			ArrayList<Point> way = new ArrayList<Point>();
-			/*
-			 * In normal view distance you can see a model on screen in a range
-			 * of: model.xpos/model.ypos: (-30..+30)/(-30..+30)
-			 */
-			way.add(new Point(-31, -30));
-			way.add(new Point(2, -10));
-			way.add(new Point(23, 30));
-			way.add(new Point(-34, -30));
-			way.add(new Point(25, 30));
-			way.add(new Point(-36, -30));
-			way.add(new Point(27, 30));
-			way.add(new Point(-38, -30));
-			way.add(new Point(29, 30));
+	
 
-			Enemy enemy = null;
-			String enemyFileName = "bullet.obj";
-			bulletObjModel = loadModelFromFile(enemyFileName);
-			
-			enemyFileName = "Airplane.obj";
-			airplaneObjModel = loadModelFromFile(enemyFileName);
-			enemy = new Enemy(airplaneObjModel, modelName2patternName(enemyFileName) + ".patt", null, center, 100, 10);
-			enemy.name = enemyFileName;
-			gameContext.registerEnemy(enemy);
-			
-			enemyFileName = "tank3.obj";
-			tankObjModel = loadModelFromFile(enemyFileName);
-			enemy = new Enemy(tankObjModel, modelName2patternName(enemyFileName) + ".patt", null, center, 100, 10);
-			enemy.name = enemyFileName;
-			gameContext.registerEnemy(enemy);
-
-			// only the last one moves
-			if (enemy != null)
-				enemy.way = way;
 
 			/* loading finished */
 			gameThread.loadingDone = true;
@@ -238,41 +167,6 @@ public class GameActivity extends AndARActivity implements
 
 		}
 
-		private ParsedObjModel loadModelFromFile(String modelFileName) {
-			// read the model file:
-			ParsedObjModel parsedObjModel = null;
-			if (modelFileName.endsWith(".obj")) {
-				try {
-					if (Config.DEBUG)
-						Debug.startMethodTracing("AndObjViewer");
-
-					if (fileUtil != null) {
-						fileReader = fileUtil.getReaderFromName(modelFileName);
-						if (fileReader != null) {
-							parsedObjModel =  new ParsedObjModel(modelFileName);
-							parser.parse(parsedObjModel, modelFileName.substring(0,
-									modelFileName.length() - 4), fileReader);
-							Log.w(tag, "model3d = new Model3D(model, "
-									+ modelName2patternName(modelFileName)
-									+ ".patt");
-						} else {
-							Log.w("ModelLoader", "no file reader: "
-									+ modelFileName);
-						}
-					}
-					if (Config.DEBUG)
-						Debug.stopMethodTracing();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			return parsedObjModel;
-		}
 
 		@Override
 		protected void onPostExecute(Void result) {
@@ -280,25 +174,25 @@ public class GameActivity extends AndARActivity implements
 			waitDialog.dismiss();
 
 			// register models on markers
-			try {
-				if (center != null) {
-					artoolkit.registerARObject(center.model3D);
-				}
-				if (gameContext.towerList != null) {
-					for (Tower tower : gameContext.towerList) {
-						artoolkit.registerARObject(tower.model3D);
-					}
-
-				}
-				if (gameContext.enemyList != null) {
-					for (Enemy enemy : gameContext.enemyList) {
-						artoolkit.registerARObject(enemy.model3D);
-					}
-				}
-			} catch (AndARException e) {
-				Log.d("on PostExecute", "ERROR ");
-				e.printStackTrace();
-			}
+//			try {
+//				if (center != null) {
+//					artoolkit.registerARObject(center.model3D);
+//				}
+//				if (gameContext.towerList != null) {
+//					for (Tower tower : gameContext.towerList) {
+//						artoolkit.registerARObject(tower.model3D);
+//					}
+//
+//				}
+//				if (gameContext.enemyList != null) {
+//					for (Enemy enemy : gameContext.enemyList) {
+//						artoolkit.registerARObject(enemy.model3D);
+//					}
+//				}
+//			} catch (AndARException e) {
+//				Log.d("on PostExecute", "ERROR ");
+//				e.printStackTrace();
+//			}
 			Log.d("Starting Preview", "Preview starting  ");
 			startPreview();
 
