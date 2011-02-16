@@ -66,7 +66,7 @@ public class ModelPool {
 
 	}
 
-	private synchronized Enemy getEnemy(int type, int health, int velocity) {
+	private synchronized Enemy getEnemy(int type, int health, int velocity, ArrayList<Point> way, Point startPoint) {
 		ArrayList<Enemy> activeList = null;
 		ArrayList<Enemy> inactiveList = null;
 		ParsedObjModel parsedObjModel = null;
@@ -103,6 +103,9 @@ public class ModelPool {
 			enemy = inactiveList.remove(0);
 			enemy.setHidden(false);
 		}
+		enemy.xpos = startPoint.x;
+		enemy.ypos = startPoint.y;
+		enemy.way = way;
 		activeList.add(enemy);
 		return enemy;
 	}
@@ -134,39 +137,29 @@ public class ModelPool {
 	}
 	
 	public Enemy getAirplane() { 
-		Enemy enemy = getEnemy(Enemy.AIRPLANE, 20, 10);
 		Point startPoint = randomWayPoint(30);
-		enemy.xpos = startPoint.x;
-		enemy.ypos = startPoint.y;
 		ArrayList<Point> way = new ArrayList<Point>();
 		way.add(new Point(0,0));
-		enemy.way = way;
-		return enemy;
+		return getEnemy(Enemy.AIRPLANE, 20, 10, way, startPoint);
 	}
 	public void dismissAirplane(Enemy enemy) {
 		dismissEnemy(Enemy.AIRPLANE, enemy);
 	}
 	
 	public Enemy getTank() { 
-		Enemy enemy = getEnemy(Enemy.TANK, 100, 4);
 		Point startPoint = randomWayPoint(30);
-		enemy.xpos = startPoint.x;
-		enemy.ypos = startPoint.y;
 		ArrayList<Point> way = new ArrayList<Point>();
 		way.add(new Point(0,0));
-		enemy.way = way;
-		return enemy;
+		return getEnemy(Enemy.TANK, 100, 4, way, startPoint);
 	}
 	public void dismissTank(Enemy enemy) {
 		dismissEnemy(Enemy.TANK, enemy);
 	}
 	
-	public Enemy getBullet(Point targetLocation) { 
-		Enemy enemy = getEnemy(Enemy.BULLET, 10, 20);
+	public Enemy getBullet(Point startPoint, Point targetLocation) { 
 		ArrayList<Point> way = new ArrayList<Point>();
 		way.add(targetLocation);
-		enemy.way = way;
-		return enemy;
+		return getEnemy(Enemy.BULLET, 10, 20, way, startPoint);
 	}
 	public void dismissBullet(Enemy enemy) {
 		dismissEnemy(Enemy.BULLET, enemy);
@@ -253,7 +246,7 @@ public class ModelPool {
 		return model;
 	}
 
-	public ArrayList<Enemy> getActiveEnemies() {
+	public synchronized ArrayList<Enemy> getActiveEnemies() {
 		ArrayList<Enemy> allActiveEnemies = new ArrayList<Enemy>();
 		allActiveEnemies.addAll(activeAirplanes);
 		allActiveEnemies.addAll(activeTanks);

@@ -118,8 +118,9 @@ public class Enemy extends Model {
 				if (way.size() == 0) {
 					// reached final target
 					way = null;
-					target.hit(health, gameContext);
-					dismiss();
+					if (target != null)
+						target.hit(health, gameContext);
+					this.dismiss();
 				}
 				Log.i(tag, "reachedpoint " + this + " to (x/y): " + this.xpos
 						+ " / " + this.ypos);

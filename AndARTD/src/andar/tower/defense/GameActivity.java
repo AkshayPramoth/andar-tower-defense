@@ -1,25 +1,14 @@
 package andar.tower.defense;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import andar.tower.defense.model.Enemy;
 import andar.tower.defense.model.ModelPool;
-import andar.tower.defense.model.Model;
-import andar.tower.defense.model.Model3D;
-import andar.tower.defense.model.ParsedObjModel;
 import andar.tower.defense.model.Tower;
-import andar.tower.defense.parser.ObjParser;
 import andar.tower.defense.util.AssetsFileUtil;
 import andar.tower.defense.util.BaseFileUtil;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.graphics.Point;
-import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,7 +63,7 @@ public class GameActivity extends AndARActivity implements
 			e.printStackTrace();
 		}
 		createHUD();
-		gameContext = new GameContext(100, gameCenter);
+		gameContext = new GameContext(100, gameCenter, handler);
 		gameThread = new GameThread(handler, gameContext);
 
 	}
@@ -95,10 +84,22 @@ public class GameActivity extends AndARActivity implements
 		handler = new GameActivityHandler() {
 			@Override
 			public void handleMessage(Message msg) {
+				if (msg.getData().containsKey("test")) {
+					int i = 1;
+				}
 				if (msg.what == UPDATE_X_Y) {
 					int x = msg.arg1;
 					hud_x.setText("Tower rel. x: " + x);
 					hud_y.setText("Dist En-Tow: " + msg.arg2);
+				} else if (msg.what == GET_TANK) {
+					gameContext.modelPool.getTank();
+				} else if (msg.what == GET_AIRPLANE) {
+					gameContext.modelPool.getAirplane();
+				} else if (msg.what == GET_BULLET) {
+					Bundle data = msg.getData();
+					Point startPoint = new Point(data.getInt("start_x"),data.getInt("start_y"));
+					Point targetPoint = new Point(data.getInt("target_x"),data.getInt("target_y"));
+					gameContext.modelPool.getBullet(startPoint, targetPoint);
 				} else {
 					Log.i(tag, "Unknown handle with what-code: " + msg.what);
 				}
