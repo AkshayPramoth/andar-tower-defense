@@ -27,13 +27,17 @@ public class GameContext {
 	}
 	
 	public void sendBulletToMainThread(Bundle data) {
-		Message msg = Message.obtain (gameActivityHandler,gameActivityHandler.GET_BULLET, data);
+		Message msg = Message.obtain (gameActivityHandler,gameActivityHandler.GET_BULLET);
+		msg.setData(data);
 		msg.sendToTarget();
 	}
 	
 	public void createEnemy() {
-		sendToMainThread(gameActivityHandler.GET_TANK);
-//		modelPool.getTank();
+		if (Math.random()*4 >=3) {
+			sendToMainThread(gameActivityHandler.GET_AIRPLANE);
+		} else {
+			sendToMainThread(gameActivityHandler.GET_TANK);
+		}
 	}
 
 	public void enemyKilled(Enemy enemy) {

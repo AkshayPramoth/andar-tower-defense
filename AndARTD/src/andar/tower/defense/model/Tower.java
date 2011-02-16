@@ -17,7 +17,7 @@ public class Tower extends Model {
 	/* Tower can attack Enemies in this radius */
 	private int actionRadius = 500;
 	private long lastShot = 0;
-	private int shootRate = 150000; // one shoot every xxxx ms
+	private int shootRate = 15000; // one shoot every xxxx ms
 	private Enemy nearestEnemyInRange;
 	private String tag = "Tower";
 	public ArrayList<Point> way;
@@ -67,9 +67,9 @@ public class Tower extends Model {
 				Bundle data = new Bundle();
 				data.putInt("target_x", (int) nearestEnemyInRange.xpos);
 				data.putInt("target_y", (int) nearestEnemyInRange.ypos);
-				data.putInt("start_x", (int)this.xpos);
-				data.putInt("start_y", (int)this.ypos);
-				gameContext.sendBulletToMainThread(data);
+				data.putInt("start_x", (int)this.model3D.getX());
+				data.putInt("start_y", (int)this.model3D.getY());
+//				gameContext.sendBulletToMainThread(data);
 //				Enemy bullet = gameContext.modelPool.getBullet(startPoint, targetLocation);
 			}
 		}

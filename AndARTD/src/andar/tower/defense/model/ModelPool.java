@@ -137,20 +137,20 @@ public class ModelPool {
 	}
 	
 	public Enemy getAirplane() { 
-		Point startPoint = randomWayPoint(30);
+		Point startPoint = randomWayPoint(60);
 		ArrayList<Point> way = new ArrayList<Point>();
 		way.add(new Point(0,0));
-		return getEnemy(Enemy.AIRPLANE, 20, 10, way, startPoint);
+		return getEnemy(Enemy.AIRPLANE, 20, 3, way, startPoint);
 	}
 	public void dismissAirplane(Enemy enemy) {
 		dismissEnemy(Enemy.AIRPLANE, enemy);
 	}
 	
 	public Enemy getTank() { 
-		Point startPoint = randomWayPoint(30);
+		Point startPoint = randomWayPoint(60);
 		ArrayList<Point> way = new ArrayList<Point>();
 		way.add(new Point(0,0));
-		return getEnemy(Enemy.TANK, 100, 4, way, startPoint);
+		return getEnemy(Enemy.TANK, 100, 2, way, startPoint);
 	}
 	public void dismissTank(Enemy enemy) {
 		dismissEnemy(Enemy.TANK, enemy);
@@ -159,7 +159,7 @@ public class ModelPool {
 	public Enemy getBullet(Point startPoint, Point targetLocation) { 
 		ArrayList<Point> way = new ArrayList<Point>();
 		way.add(targetLocation);
-		return getEnemy(Enemy.BULLET, 10, 20, way, startPoint);
+		return getEnemy(Enemy.BULLET, 10, 10, way, startPoint);
 	}
 	public void dismissBullet(Enemy enemy) {
 		dismissEnemy(Enemy.BULLET, enemy);
