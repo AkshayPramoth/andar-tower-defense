@@ -1,4 +1,5 @@
 package andar.tower.defense.model;
+
 import java.lang.Math;
 import java.io.Serializable;
 import java.io.Writer;
@@ -36,7 +37,8 @@ public class Model3D extends ARObject implements Serializable {
 	private float y = 0;
 	private float z = 0;
 
-	public Model3D(Model model, ParsedObjModel parsedObjModel, String patternName) {
+	public Model3D(Model model, ParsedObjModel parsedObjModel,
+			String patternName) {
 		super("model", patternName, 80.0, new double[] { 0, 0 });
 		this.parsedObjModel = parsedObjModel;
 		this.model = model;
@@ -58,35 +60,41 @@ public class Model3D extends ARObject implements Serializable {
 		this.nonTexturedGroups = nonTexturedGroups
 				.toArray(new Group[nonTexturedGroups.size()]);
 	}
-	
+
 	public synchronized void update(long time, GameCenter center) {
-//		Log.i(tag, "is model " + this.model.name + " visible? " + this.isVisible());
-		if(this.isVisible() && center.isVisible()) {
+		// Log.i(tag, "is model " + this.model.name + " visible? " +
+		// this.isVisible());
+		if (this.isVisible() && center.isVisible()) {
 			double[] transmat = this.getTransMatrix();
 			double[] centerMat = center.getInvTransMat();
 			double[] coordsInCenterCS = new double[12];
 			ARToolkit.arUtilMatMul(centerMat, transmat, coordsInCenterCS);
 			float halfWidth = 0;
-			/* there is a strange uncertainty this calculation. 
-			 * the following factors try to adjust this but are just tried out
-			 * and the inaccuracy seems to change depending on the viewpoint.
-			 * Try to tower and center so that distance in either x or y direction is 0... 
+			/*
+			 * there is a strange uncertainty this calculation. the following
+			 * factors try to adjust this but are just tried out and the
+			 * inaccuracy seems to change depending on the viewpoint. Try to
+			 * tower and center so that distance in either x or y direction is
+			 * 0...
 			 */
+//			x = (float) coordsInCenterCS[3];
+//			y = (float) coordsInCenterCS[7];
 			x = (float) coordsInCenterCS[3] - 20;
 			y = (float) coordsInCenterCS[7] - 180;
 			z = (float) coordsInCenterCS[11] - halfWidth;
 			Log.i(tag, "coords of " + model.name + " to center x/y/z: " + x
-					+ "/" + y + "/" + z);	
+					+ "/" + y + "/" + z);
 		} else {
-			//is there any touchevent?
+			// is there any touchevent?
 		}
 	}
-	
+
 	@Override
 	public void init(GL10 gl) {
 		int[] tmpTextureID = new int[1];
 		// load textures of every material(that has a texture):
-		Iterator<Material> materialI = parsedObjModel.getMaterials().values().iterator();
+		Iterator<Material> materialI = parsedObjModel.getMaterials().values()
+				.iterator();
 		while (materialI.hasNext()) {
 			Material material = (Material) materialI.next();
 			if (material.hasTexture()) {
@@ -113,71 +121,74 @@ public class Model3D extends ARObject implements Serializable {
 	@Override
 	public void draw(GL10 gl) {
 		super.draw(gl);
+		if (!model.isHidden()) {
 
-		// gl = (GL10) GLDebugHelper.wrap(gl,
-		// GLDebugHelper.CONFIG_CHECK_GL_ERROR, log);
-		// do positioning:
-		gl.glScalef(model.scale, model.scale, model.scale);
-		gl.glTranslatef(model.xpos, model.ypos, model.zpos);
-		gl.glRotatef(model.xrot, 1, 0, 0);
-		gl.glRotatef(model.yrot, 0, 1, 0);
-		gl.glRotatef(model.zrot, 0, 0, 1);
+			// gl = (GL10) GLDebugHelper.wrap(gl,
+			// GLDebugHelper.CONFIG_CHECK_GL_ERROR, log);
+			// do positioning:
+			gl.glScalef(model.scale, model.scale, model.scale);
+			gl.glTranslatef(model.xpos, model.ypos, model.zpos);
+			gl.glRotatef(model.xrot, 1, 0, 0);
+			gl.glRotatef(model.yrot, 0, 1, 0);
+			gl.glRotatef(model.zrot, 0, 0, 1);
 
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
+			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+			gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
 
-		// first draw non textured groups
-		gl.glDisable(GL10.GL_TEXTURE_2D);
-		int cnt = nonTexturedGroups.length;
-		for (int i = 0; i < cnt; i++) {
-			Group group = nonTexturedGroups[i];
-			Material mat = group.getMaterial();
-			if (mat != null) {
-				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR,
-						mat.specularlight);
-				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT,
-						mat.ambientlight);
-				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_DIFFUSE,
-						mat.diffuselight);
-				gl.glMaterialf(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS,
-						mat.shininess);
-			}
-			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, group.vertices);
-			gl.glNormalPointer(GL10.GL_FLOAT, 0, group.normals);
-			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, group.vertexCount);
-		}
-
-		// now we can continue with textured ones
-		gl.glEnable(GL10.GL_TEXTURE_2D);
-		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-
-		cnt = texturedGroups.length;
-		for (int i = 0; i < cnt; i++) {
-			Group group = texturedGroups[i];
-			Material mat = group.getMaterial();
-			if (mat != null) {
-				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR,
-						mat.specularlight);
-				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT,
-						mat.ambientlight);
-				gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_DIFFUSE,
-						mat.diffuselight);
-				gl.glMaterialf(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS,
-						mat.shininess);
-				if (mat.hasTexture()) {
-					gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, group.texcoords);
-					gl.glBindTexture(GL10.GL_TEXTURE_2D, textureIDs.get(mat)
-							.intValue());
+			// first draw non textured groups
+			gl.glDisable(GL10.GL_TEXTURE_2D);
+			int cnt = nonTexturedGroups.length;
+			for (int i = 0; i < cnt; i++) {
+				Group group = nonTexturedGroups[i];
+				Material mat = group.getMaterial();
+				if (mat != null) {
+					gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR,
+							mat.specularlight);
+					gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT,
+							mat.ambientlight);
+					gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_DIFFUSE,
+							mat.diffuselight);
+					gl.glMaterialf(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS,
+							mat.shininess);
 				}
+				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, group.vertices);
+				gl.glNormalPointer(GL10.GL_FLOAT, 0, group.normals);
+				gl.glDrawArrays(GL10.GL_TRIANGLES, 0, group.vertexCount);
 			}
-			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, group.vertices);
-			gl.glNormalPointer(GL10.GL_FLOAT, 0, group.normals);
-			gl.glDrawArrays(GL10.GL_TRIANGLES, 0, group.vertexCount);
-		}
 
-		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL10.GL_NORMAL_ARRAY);
-		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+			// now we can continue with textured ones
+			gl.glEnable(GL10.GL_TEXTURE_2D);
+			gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+
+			cnt = texturedGroups.length;
+			for (int i = 0; i < cnt; i++) {
+				Group group = texturedGroups[i];
+				Material mat = group.getMaterial();
+				if (mat != null) {
+					gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR,
+							mat.specularlight);
+					gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT,
+							mat.ambientlight);
+					gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_DIFFUSE,
+							mat.diffuselight);
+					gl.glMaterialf(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS,
+							mat.shininess);
+					if (mat.hasTexture()) {
+						gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0,
+								group.texcoords);
+						gl.glBindTexture(GL10.GL_TEXTURE_2D, textureIDs
+								.get(mat).intValue());
+					}
+				}
+				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, group.vertices);
+				gl.glNormalPointer(GL10.GL_FLOAT, 0, group.normals);
+				gl.glDrawArrays(GL10.GL_TRIANGLES, 0, group.vertexCount);
+			}
+
+			gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+			gl.glDisableClientState(GL10.GL_NORMAL_ARRAY);
+			gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		}
 	}
 
 	public synchronized double[] getInvTransMat() {

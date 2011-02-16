@@ -157,8 +157,10 @@ public class GameActivity extends AndARActivity implements
 
 			gameContext.modelPool = new ModelPool(gameContext, artoolkit, fileUtil);
 
-			Tower tower = gameContext.modelPool.getTower("marker_rupee16.patt");
-			Tower tower2 = gameContext.modelPool.getTower("marker_at32.patt");
+			gameContext.modelPool.getTower("marker_rupee16.patt");
+//			gameContext.modelPool.getTower("marker_peace16.patt");
+//			gameContext.modelPool.getTower("marker_at16.patt");
+//			gameContext.modelPool.getTower("marker_hand16.patt");
 
 			/* loading finished */
 			gameThread.loadingDone = true;

@@ -18,7 +18,7 @@ public class Model implements Serializable {
 	private ParsedObjModel parsedObjModel; // the meshes and textures
 	public Model3D model3D;
 	public float xrot = 90;
-	public float yrot = 0;
+	public float yrot = 90;
 	public float zrot = 0;
 	/* in normal view distance you can see a model 
 	 * on screen in a range of x/y: (-30..+30)/(-30..+30) */
