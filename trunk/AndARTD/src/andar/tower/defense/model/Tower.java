@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import andar.tower.defense.GameContext;
 import android.graphics.Point;
+import android.os.Bundle;
 import android.util.Log;
 
 public class Tower extends Model {
@@ -15,6 +16,8 @@ public class Tower extends Model {
 
 	/* Tower can attack Enemies in this radius */
 	private int actionRadius = 500;
+	private long lastShot = 0;
+	private int shootRate = 150000; // one shoot every xxxx ms
 	private Enemy nearestEnemyInRange;
 	private String tag = "Tower";
 	public ArrayList<Point> way;
@@ -56,15 +59,19 @@ public class Tower extends Model {
 		return distance;
 	}
 
-	public void attack() {
-		if (shoot == true) {
-			
-			Point targetLocation = new Point((int) nearestEnemyInRange.xpos - 5,
-					(int) nearestEnemyInRange.ypos - 5);
-			Enemy Bullet = gameContext.modelPool.getBullet(targetLocation);
-			Bullet.xpos = this.xpos + 5;
-			Bullet.ypos = this.ypos + 5;
-
+	public synchronized void attack() {
+		if (nearestEnemyInRange != null) {
+			long timestamp = System.currentTimeMillis();
+			if (timestamp - lastShot > shootRate) {
+				lastShot = timestamp;
+				Bundle data = new Bundle();
+				data.putInt("target_x", (int) nearestEnemyInRange.xpos);
+				data.putInt("target_y", (int) nearestEnemyInRange.ypos);
+				data.putInt("start_x", (int)this.xpos);
+				data.putInt("start_y", (int)this.ypos);
+				gameContext.sendBulletToMainThread(data);
+//				Enemy bullet = gameContext.modelPool.getBullet(startPoint, targetLocation);
+			}
 		}
 
 	}

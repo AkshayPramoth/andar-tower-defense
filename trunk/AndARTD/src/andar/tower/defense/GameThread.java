@@ -68,12 +68,12 @@ public class GameThread extends Thread {
 						enemy.positionUpdate(gameContext);
 					}
 				}
-				synchronized (gameContext.modelPool) {
-					for (Enemy bullet : gameContext.modelPool
-							.getActiveBullets()) {
-						bullet.positionUpdate(gameContext);
-					}
-				}
+//				synchronized (gameContext.modelPool) {
+//					for (Enemy bullet : gameContext.modelPool
+//							.getActiveBullets()) {
+//						bullet.positionUpdate(gameContext);
+//					}
+//				}
 
 				// update positioning of towers
 				int i = 0;
