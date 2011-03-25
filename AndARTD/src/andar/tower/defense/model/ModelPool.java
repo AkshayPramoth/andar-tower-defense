@@ -4,18 +4,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import edu.dhbw.andar.ARToolkit;
-import edu.dhbw.andar.exceptions.AndARException;
-
 import andar.tower.defense.GameContext;
 import andar.tower.defense.GameActivity.Config;
 import andar.tower.defense.parser.ObjParser;
-import andar.tower.defense.util.AssetsFileUtil;
 import andar.tower.defense.util.BaseFileUtil;
 import android.graphics.Point;
 import android.net.ParseException;
 import android.os.Debug;
 import android.util.Log;
+import edu.dhbw.andar.ARToolkit;
+import edu.dhbw.andar.exceptions.AndARException;
 
 /**
  * Manage a pool of models for reuse
