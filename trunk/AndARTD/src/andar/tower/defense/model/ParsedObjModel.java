@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import andar.tower.defense.GameContext;
 import andar.tower.defense.parser.Group;
 import andar.tower.defense.parser.Material;
 import andar.tower.defense.util.BaseFileUtil;

@@ -1,9 +1,7 @@
 package andar.tower.defense.model;
 
-import java.lang.Math;
 import java.io.Serializable;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -15,7 +13,6 @@ import andar.tower.defense.parser.Group;
 import andar.tower.defense.parser.Material;
 import android.opengl.GLUtils;
 import android.util.Log;
-import android.widget.TextView;
 import edu.dhbw.andar.ARObject;
 import edu.dhbw.andar.ARToolkit;
 

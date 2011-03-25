@@ -1,7 +1,6 @@
 package andar.tower.defense;
 
 import andar.tower.defense.model.ModelPool;
-import andar.tower.defense.model.Tower;
 import andar.tower.defense.util.AssetsFileUtil;
 import andar.tower.defense.util.BaseFileUtil;
 import android.app.ProgressDialog;
@@ -126,7 +125,6 @@ public class GameActivity extends AndARActivity implements
 		// the preview can be started
 		// after loading the model
 		
-//		if (gameContext.modelPool.getActiveTowers().size() == 0) {
 		if (!gameThread.loadingDone) {
 			waitDialog = ProgressDialog.show(this, "", getResources().getText(
 					R.string.loading), true);
@@ -158,9 +156,9 @@ public class GameActivity extends AndARActivity implements
 			gameContext.modelPool = new ModelPool(gameContext, artoolkit, fileUtil);
 
 			gameContext.modelPool.getTower("marker_rupee16.patt");
-//			gameContext.modelPool.getTower("marker_peace16.patt");
-//			gameContext.modelPool.getTower("marker_at16.patt");
-//			gameContext.modelPool.getTower("marker_hand16.patt");
+			gameContext.modelPool.getTower("marker_peace16.patt");
+			gameContext.modelPool.getTower("marker_at16.patt");
+			gameContext.modelPool.getTower("marker_hand16.patt");
 
 			/* loading finished */
 			gameThread.loadingDone = true;
@@ -173,27 +171,6 @@ public class GameActivity extends AndARActivity implements
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 			waitDialog.dismiss();
-
-			// register models on markers
-//			try {
-//				if (center != null) {
-//					artoolkit.registerARObject(center.model3D);
-//				}
-//				if (gameContext.towerList != null) {
-//					for (Tower tower : gameContext.towerList) {
-//						artoolkit.registerARObject(tower.model3D);
-//					}
-//
-//				}
-//				if (gameContext.enemyList != null) {
-//					for (Enemy enemy : gameContext.enemyList) {
-//						artoolkit.registerARObject(enemy.model3D);
-//					}
-//				}
-//			} catch (AndARException e) {
-//				Log.d("on PostExecute", "ERROR ");
-//				e.printStackTrace();
-//			}
 			Log.d("Starting Preview", "Preview starting  ");
 			startPreview();
 
